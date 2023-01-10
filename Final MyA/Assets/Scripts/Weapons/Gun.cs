@@ -45,4 +45,13 @@ public class Gun {
     // public float Damage { get => _damage; set => _damage = value; }
     // public float Spread { get => _spread; }
     // public int BulletsQty { get => _bulletsQty; }
+
+    public void ClampValues() {
+        _reloadTime = Mathf.Clamp(_reloadTime, .05f, 5);
+        _spread = Mathf.Clamp(_spread, 0, 2);
+        _damage = Mathf.Clamp(_damage, 1, 99);
+        _fireRate = Mathf.Clamp(_fireRate, .05f, 5);
+        _maxAmmo = Mathf.Clamp(_maxAmmo, 1, 999);
+
+    }
 }

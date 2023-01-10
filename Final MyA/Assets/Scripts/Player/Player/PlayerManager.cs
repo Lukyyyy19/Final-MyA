@@ -14,6 +14,7 @@ public class PlayerManager : Entity {
 
 
 
+
     GunsType currentGun;
 
     private HashSet<GunParts> upgrades = new HashSet<GunParts>();
@@ -64,14 +65,17 @@ public class PlayerManager : Entity {
 
     public void UpgradeGun(GunParts gunPart) {
         if (upgrades.Add(gunPart))
-            gunPart.Upgrade();
+            gunPart.Attach(gun);
+        gun.ClampValues();
+
 
 
     }
     public void DowngradeGun(GunParts gunPart) {
         if (upgrades.Remove(gunPart)) {
-            gunPart.Downgrade();
+            gunPart.Deattach(gun);
         }
+        gun.ClampValues();
 
     }
 }

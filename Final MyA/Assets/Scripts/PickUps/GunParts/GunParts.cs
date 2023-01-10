@@ -19,10 +19,10 @@ public class GunParts : MonoBehaviour, IPickeupable {
     }
 
 
-    public virtual void Upgrade() {
+    public virtual void Attach(Gun gun) {
 
     }
-    public virtual void Downgrade() {
+    public virtual void Deattach(Gun gun) {
 
     }
 }
