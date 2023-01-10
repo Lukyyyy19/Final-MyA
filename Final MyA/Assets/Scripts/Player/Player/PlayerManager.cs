@@ -9,8 +9,10 @@ public class PlayerManager : Entity {
 
     private Vector2 _keyDirection;
 
-    public delegate void ShootDelegate(int bullet);
-    public event ShootDelegate OnShoot;
+    public delegate void UpdateAmmoDelegate(int bullet);
+    public event UpdateAmmoDelegate OnUpdateAmmo;
+
+
 
 
 
@@ -30,12 +32,14 @@ public class PlayerManager : Entity {
         playerInputs.ArtificialUpdate();
         _keyDirection.x = playerInputs.MovHor;
         _keyDirection.y = playerInputs.MovVer;
-        Debug.Log(gun.Name);
         if (currentGun != _gunsType) {
             VariableChangeHandler(_gunsType);
         }
         if (playerInputs.Fire) {
             Shoot();
+        }
+        if (playerInputs.Reload) {
+            Invoke("Reload", gun.ReloadTime);
         }
         currentGun = gun.Name;
 
@@ -44,7 +48,13 @@ public class PlayerManager : Entity {
 
     protected override void Shoot() {
         base.Shoot();
-        OnShoot?.Invoke(gun.Ammo);
+        OnUpdateAmmo?.Invoke(gun.Ammo);
+    }
+
+    protected override void Reload() {
+        base.Reload();
+        OnUpdateAmmo?.Invoke(gun.Ammo);
+
     }
 
     private void FixedUpdate() {
@@ -53,7 +63,7 @@ public class PlayerManager : Entity {
 
     private void VariableChangeHandler(GunsType newGun) {
         gun = GunContainer.GetGun(newGun);
-        OnShoot?.Invoke(gun.Ammo);
+        OnUpdateAmmo?.Invoke(gun.Ammo);
 
     }
 
@@ -67,6 +77,7 @@ public class PlayerManager : Entity {
         if (upgrades.Add(gunPart))
             gunPart.Attach(gun);
         gun.ClampValues();
+        OnUpdateAmmo?.Invoke(gun.Ammo);
 
 
 
@@ -76,6 +87,7 @@ public class PlayerManager : Entity {
             gunPart.Deattach(gun);
         }
         gun.ClampValues();
+        OnUpdateAmmo?.Invoke(gun.Ammo);
 
     }
 }

@@ -28,6 +28,8 @@ public class Entity : MonoBehaviour, IDamageable {
     [SerializeField]
     protected ArmMovement _hand;
 
+    public delegate void ShootDelegate();
+    public event ShootDelegate OnShoot;
 
     protected virtual void Awake() {
         _rb = GetComponent<Rigidbody2D>();
@@ -37,6 +39,7 @@ public class Entity : MonoBehaviour, IDamageable {
         if (gun == null) return;
         if (!_canShoot) return;
         if (gun.Ammo < 1) return;
+        OnShoot?.Invoke();
         _canShoot = false;
         for (int i = 0; i < gun.BulletsQty; i++) {
 
@@ -54,6 +57,12 @@ public class Entity : MonoBehaviour, IDamageable {
 
     void CanShootAgain() {
         _canShoot = true;
+    }
+
+    protected virtual void Reload() {
+        if (gun.Ammo == gun.MaxAmmo) return;
+        gun.Ammo = gun.MaxAmmo;
+
     }
 
     protected virtual void Die() {

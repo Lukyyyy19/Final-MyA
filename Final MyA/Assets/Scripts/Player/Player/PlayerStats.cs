@@ -14,10 +14,11 @@ public class PlayerStats : MonoBehaviour {
     public TextMeshProUGUI _textFireRate;
     public TextMeshProUGUI _textDamage;
     public TextMeshProUGUI _textSpread;
+    public TextMeshProUGUI _textReloadTime;
 
     void Start() {
         _playerManager = GetComponent<PlayerManager>();
-        Shoot(_playerManager.gun.Ammo);
+        UpdateAmmo(_playerManager.gun.Ammo);
 
     }
 
@@ -26,16 +27,17 @@ public class PlayerStats : MonoBehaviour {
         _textFireRate.text = _playerManager.gun.FireRate.ToString();
         _textName.text = _playerManager.gun.Name.ToString();
         _textSpread.text = _playerManager.gun.Spread.ToString();
+        _textReloadTime.text = _playerManager.gun.ReloadTime.ToString();
     }
 
-    private void Shoot(int bullet) {
+    private void UpdateAmmo(int bullet) {
         _text.text = bullet.ToString();
     }
 
     private void OnEnable() {
-        _playerManager.OnShoot += Shoot;
+        _playerManager.OnUpdateAmmo += UpdateAmmo;
     }
     private void OnDisable() {
-        _playerManager.OnShoot -= Shoot;
+        _playerManager.OnUpdateAmmo -= UpdateAmmo;
     }
 }
