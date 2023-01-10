@@ -42,7 +42,10 @@ public class Entity : MonoBehaviour, IDamageable {
 
             Vector2 dir = _hand.transform.rotation * Vector2.down;
             Vector2 pdir = Vector2.Perpendicular(dir) * Random.Range(-gun.Spread, gun.Spread);
-            InstantiateBullets.instance.bulletPool.Get(gun.BulletType, _firePoint.position, (dir + pdir));
+            var bullet = InstantiateBullets.instance.bulletPool.Get(gun.BulletType, _firePoint.position, (dir + pdir));
+            //Cambiar de Layer para que nuestra bala no nos golpee
+            bullet.damage = gun.Damage;
+
         }
 
         gun.Ammo--;

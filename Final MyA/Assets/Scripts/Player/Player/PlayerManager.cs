@@ -4,6 +4,7 @@ using UnityEngine;
 using GunsEnum;
 public class PlayerManager : Entity {
 
+    public static PlayerManager instance;
     public PlayerInputs playerInputs;
 
     private Vector2 _keyDirection;
@@ -11,21 +12,15 @@ public class PlayerManager : Entity {
     public delegate void ShootDelegate(int bullet);
     public event ShootDelegate OnShoot;
 
-    public delegate void OnVariableChangeDelegate(GunsType newGun);
-    public event OnVariableChangeDelegate OnVariableChange;
+
 
     GunsType currentGun;
-    public GunsType gunsType {
-        set {
-            if (_gunsType == value) return;
-            _gunsType = value;
-        }
-    }
 
-
+    private HashSet<GunParts> upgrades = new HashSet<GunParts>();
 
     protected override void Awake() {
         base.Awake();
+        instance = this;
         playerInputs = new PlayerInputs();
         gun = GunContainer.GetGun(_gunsType);
     }
@@ -36,12 +31,14 @@ public class PlayerManager : Entity {
         _keyDirection.y = playerInputs.MovVer;
         Debug.Log(gun.Name);
         if (currentGun != _gunsType) {
-            OnVariableChange?.Invoke(_gunsType);
+            VariableChangeHandler(_gunsType);
         }
         if (playerInputs.Fire) {
             Shoot();
         }
         currentGun = gun.Name;
+
+
     }
 
     protected override void Shoot() {
@@ -53,17 +50,28 @@ public class PlayerManager : Entity {
         Move(_keyDirection);
     }
 
-    private void OnEnable() {
-        OnVariableChange = VariableChangeHandler;
-    }
-    private void OnDisable() {
-        OnVariableChange -= VariableChangeHandler;
-    }
     private void VariableChangeHandler(GunsType newGun) {
         gun = GunContainer.GetGun(newGun);
         OnShoot?.Invoke(gun.Ammo);
 
     }
 
+    private void OnTriggerEnter2D(Collider2D other) {
+        IPickeupable pickeupable;
+        if (!other.TryGetComponent<IPickeupable>(out pickeupable)) return;
+        pickeupable.OnPickUp();
+    }
 
+    public void UpgradeGun(GunParts gunPart) {
+        if (upgrades.Add(gunPart))
+            gunPart.Upgrade();
+
+
+    }
+    public void DowngradeGun(GunParts gunPart) {
+        if (upgrades.Remove(gunPart)) {
+            gunPart.Downgrade();
+        }
+
+    }
 }

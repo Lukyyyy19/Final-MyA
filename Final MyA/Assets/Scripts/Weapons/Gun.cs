@@ -26,13 +26,23 @@ public class Gun {
         _bulletsQty = bulletsQty;
     }
 
-    public float FireRate { get => _fireRate; }
-    public string BulletType { get => _bulletType; }
+    public float FireRate { get => _fireRate; set => _fireRate = value; }
+    public string BulletType { get => _bulletType; set => _bulletType = value; }
+    public int BulletsQty { get => _bulletsQty; set => _bulletsQty = value; }
     public int Ammo { get => _ammo; set => _ammo = value; }
-    public int MaxAmmo { get => _maxAmmo; }
-    public float ReloadTime { get => _reloadTime; }
-    public GunsType Name { get => _name; }
-    public float Damage { get => _damage; }
-    public float Spread { get => _spread; }
-    public int BulletsQty { get => _bulletsQty; }
+    public int MaxAmmo { get => _maxAmmo; set => _maxAmmo = value; }
+    public float ReloadTime { get => _reloadTime; set => _reloadTime = value; }
+    public GunsType Name { get => _name; set => _name = value; }
+    public float Damage { get => _damage; set => _damage = value; }
+    public float Spread { get => _spread; set => _spread = value; }
+
+    // public float FireRate { get => _fireRate; }
+    // public string BulletType { get => _bulletType; }
+    // public int Ammo { get => _ammo; set => _ammo = value; }
+    // public int MaxAmmo { get => _maxAmmo; }
+    // public float ReloadTime { get => _reloadTime; }
+    // public GunsType Name { get => _name; }
+    // public float Damage { get => _damage; set => _damage = value; }
+    // public float Spread { get => _spread; }
+    // public int BulletsQty { get => _bulletsQty; }
 }
