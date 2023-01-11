@@ -25,6 +25,7 @@ public class CursorManager : MonoBehaviour {
     }
 
     private void Update() {
+        frameRate = _playerManager.gun.FireRate * .13f;
         if (_playAnimation)
             CursorAnimation();
     }
