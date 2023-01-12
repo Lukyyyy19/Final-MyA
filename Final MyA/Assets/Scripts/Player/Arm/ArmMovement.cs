@@ -16,11 +16,14 @@ public class ArmMovement : MonoBehaviour {
 
     void Update() {
         MoveHand();
+
+
     }
     private void MoveHand() {
         var _currentMousePos = _cam.ScreenToWorldPoint(_playerManager.playerInputs.MousePos);
         _dir = _currentMousePos - transform.position;
         float angle = Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle + 90));
+
     }
 }

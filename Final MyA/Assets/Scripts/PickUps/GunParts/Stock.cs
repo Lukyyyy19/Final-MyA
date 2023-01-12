@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Stock : GunParts {
     [SerializeField]
-    private float _addFirerate = -.12f;
+    private float _addFirerate;
     [SerializeField]
-    private float _addSpread = -.3f;
+    private float _addSpread;
 
     void Start() {
-        gunPart = GunPart.Barrel;
+        gunPart = GunPart.Stock;
+        _addFirerate = GunContainer.GetGun(gunsType).FireRate;
+        _addSpread = GunContainer.GetGun(gunsType).Spread;
     }
 
     public override void Attach(Gun gun) {

@@ -8,9 +8,12 @@ public class InstantiateBullets : InstanceClass<InstantiateBullets> {
     public BulletPool bulletPool;
 
     [SerializeField]
-    private Bullet _bullet;
+    private Bullet _mainBullet;
+    [SerializeField]
+    private Bullet _enemyBullet;
 
     private void Start() {
-        bulletPool.IntantiateBullets("Main Bullets", _bullet, 25);
+        bulletPool.IntantiateBullets("Main Bullets", _mainBullet, 25);
+        bulletPool.IntantiateBullets("Enemy Bullets", _enemyBullet, 25);
     }
 }

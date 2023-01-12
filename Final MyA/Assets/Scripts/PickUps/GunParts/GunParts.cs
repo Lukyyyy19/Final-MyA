@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using GunsEnum;
 public class GunParts : MonoBehaviour, IPickeupable {
 
     public enum GunPart {
@@ -10,11 +10,13 @@ public class GunParts : MonoBehaviour, IPickeupable {
         Barrel,
     }
     public GunPart gunPart;
+    [SerializeField]
+    protected GunsType gunsType;
 
 
     public void OnPickUp() {
-        PlayerManager.instance.UpgradeGun(this);
-        Debug.Log(gunPart);
+        // PlayerManager.instance.UpgradeGun(this);
+        // Debug.Log(gunPart);
         Destroy(gameObject);
     }
 

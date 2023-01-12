@@ -12,38 +12,27 @@ public class PlayerManager : Entity {
     public delegate void UpdateAmmoDelegate(int bullet);
     public event UpdateAmmoDelegate OnUpdateAmmo;
 
-
-
-
-
-
-    GunsType currentGun;
-
-    private HashSet<GunParts> upgrades = new HashSet<GunParts>();
-
+    GunStats _gunStats;
     protected override void Awake() {
         base.Awake();
         instance = this;
         playerInputs = new PlayerInputs();
-        gun = GunContainer.GetGun(_gunsType);
+        _gunStats = GetComponentInChildren<GunStats>();
+        gun = _gunStats.gun;
+
     }
 
     void Update() {
         playerInputs.ArtificialUpdate();
         _keyDirection.x = playerInputs.MovHor;
         _keyDirection.y = playerInputs.MovVer;
-        if (currentGun != _gunsType) {
-            VariableChangeHandler(_gunsType);
-        }
+
         if (playerInputs.Fire) {
             Shoot();
         }
         if (playerInputs.Reload) {
             Invoke("Reload", gun.ReloadTime);
         }
-        currentGun = gun.Name;
-
-
     }
 
     protected override void Shoot() {
@@ -70,24 +59,22 @@ public class PlayerManager : Entity {
     private void OnTriggerEnter2D(Collider2D other) {
         IPickeupable pickeupable;
         if (!other.TryGetComponent<IPickeupable>(out pickeupable)) return;
-        pickeupable.OnPickUp();
-    }
-
-    public void UpgradeGun(GunParts gunPart) {
-        if (upgrades.Add(gunPart))
-            gunPart.Attach(gun);
-        gun.ClampValues();
-        OnUpdateAmmo?.Invoke(gun.Ammo);
-
-
-
-    }
-    public void DowngradeGun(GunParts gunPart) {
-        if (upgrades.Remove(gunPart)) {
-            gunPart.Deattach(gun);
+        GunParts _gunParts;
+        if (other.TryGetComponent<GunParts>(out _gunParts)) {
+            _gunStats.UpgradeGun(_gunParts);
+            OnUpdateAmmo?.Invoke(gun.Ammo);
         }
-        gun.ClampValues();
-        OnUpdateAmmo?.Invoke(gun.Ammo);
+    }
+
+
+    void AsignPlayerGun() {
+        gun = GunContainer.GetGun(_gunsType);
+    }
+    private void OnDisable() {
+        GunContainer.instance.OnCreate -= AsignPlayerGun;
+    }
+    private void OnEnable() {
+        GunContainer.instance.OnCreate += AsignPlayerGun;
 
     }
 }

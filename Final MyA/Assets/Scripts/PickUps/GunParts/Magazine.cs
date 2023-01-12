@@ -5,29 +5,35 @@ using UnityEngine;
 public class Magazine : GunParts {
 
     [SerializeField]
-    private int _addBullets = 10;
+    protected int _Bullets;
     [SerializeField]
-    private float _addFirerate = -.22f;
+    protected string _bulletType;
     [SerializeField]
-    private float _addReloadTime = -.25f;
+    protected float _Firerate;
+    [SerializeField]
+    protected float _ReloadTime;
 
 
     void Start() {
         gunPart = GunPart.Magazine;
+        _Bullets = GunContainer.GetGun(gunsType).MaxAmmo;
+        _Firerate = GunContainer.GetGun(gunsType).FireRate;
+        _ReloadTime = GunContainer.GetGun(gunsType).ReloadTime;
+        _bulletType = GunContainer.GetGun(gunsType).BulletType;
     }
 
     public override void Attach(Gun gun) {
-        gun.MaxAmmo += _addBullets;
-        gun.FireRate += _addFirerate;
-        gun.ReloadTime += _addReloadTime;
+        gun.MaxAmmo += _Bullets;
+        gun.FireRate += _Firerate;
+        gun.ReloadTime += _ReloadTime;
         gun.Ammo = gun.MaxAmmo;
 
 
     }
     public override void Deattach(Gun gun) {
-        gun.MaxAmmo -= _addBullets;
-        gun.FireRate -= _addFirerate;
-        gun.ReloadTime -= _addReloadTime;
+        gun.MaxAmmo -= _Bullets;
+        gun.FireRate -= _Firerate;
+        gun.ReloadTime -= _ReloadTime;
         gun.Ammo = gun.MaxAmmo;
 
 

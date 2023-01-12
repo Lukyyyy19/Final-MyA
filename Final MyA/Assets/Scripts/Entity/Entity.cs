@@ -26,13 +26,14 @@ public class Entity : MonoBehaviour, IDamageable {
     protected Transform _firePoint;
 
     [SerializeField]
-    protected ArmMovement _hand;
+    protected Transform _hand;
 
     public delegate void ShootDelegate();
     public event ShootDelegate OnShoot;
 
     protected virtual void Awake() {
         _rb = GetComponent<Rigidbody2D>();
+        _health = _maxHealth;
     }
 
     protected virtual void Shoot() {
@@ -43,7 +44,7 @@ public class Entity : MonoBehaviour, IDamageable {
         _canShoot = false;
         for (int i = 0; i < gun.BulletsQty; i++) {
 
-            Vector2 dir = _hand.transform.rotation * Vector2.down;
+            Vector2 dir = _hand.rotation * Vector2.down;
             Vector2 pdir = Vector2.Perpendicular(dir) * Random.Range(-gun.Spread, gun.Spread);
             var bullet = InstantiateBullets.instance.bulletPool.Get(gun.BulletType, _firePoint.position, (dir + pdir));
             //Cambiar de Layer para que nuestra bala no nos golpee

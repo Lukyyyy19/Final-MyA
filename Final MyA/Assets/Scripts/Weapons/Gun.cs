@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GunsEnum;
-public class Gun {
+using System;
+public class Gun : ICloneable {
 
     private float _fireRate;
     private string _bulletType;
@@ -13,6 +14,7 @@ public class Gun {
     private GunsType _name;
     private float _damage;
     private float _spread;
+    public Action<GunsType, Gun> notify;
 
     public Gun(float fireRate, string bulletType, int maxAmmo, float reloadTime, float damage, float spread, GunsType name, int bulletsQty) {
         _fireRate = fireRate;
@@ -24,6 +26,11 @@ public class Gun {
         _damage = damage;
         _spread = spread;
         _bulletsQty = bulletsQty;
+    }
+
+    public void Configure(Action<GunsType, Gun> notify) {
+        //ScreenManager.instance.AddPausable(this);
+        this.notify = notify;
     }
 
     public float FireRate { get => _fireRate; set => _fireRate = value; }
@@ -53,5 +60,8 @@ public class Gun {
         _fireRate = Mathf.Clamp(_fireRate, .05f, 5);
         _maxAmmo = Mathf.Clamp(_maxAmmo, 1, 999);
 
+    }
+    public object Clone() {
+        return this.MemberwiseClone();
     }
 }
