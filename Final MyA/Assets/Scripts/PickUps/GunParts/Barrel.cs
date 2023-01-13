@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using GunsEnum;
 public class Barrel : GunParts {
 
     [SerializeField]
@@ -16,11 +16,14 @@ public class Barrel : GunParts {
 
     void Start() {
         gunPart = GunPart.Barrel;
+    }
+
+    protected override void InitialStats() {
+        base.InitialStats();
         _addDamage = GunContainer.GetGun(gunsType).Damage;
         _addFirerate = GunContainer.GetGun(gunsType).FireRate;
         _addSpread = GunContainer.GetGun(gunsType).Spread;
         _bulletsPerShot = GunContainer.GetGun(gunsType).BulletsQty;
-
     }
 
     public override void Attach(Gun gun) {

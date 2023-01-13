@@ -18,8 +18,8 @@ public class PlayerManager : Entity {
         instance = this;
         playerInputs = new PlayerInputs();
         _gunStats = GetComponentInChildren<GunStats>();
-        gun = _gunStats.gun;
-
+        // gun = _gunStats.gun;
+        gun = GunContainer.GetGun(_gunsType);
     }
 
     void Update() {
@@ -59,22 +59,24 @@ public class PlayerManager : Entity {
     private void OnTriggerEnter2D(Collider2D other) {
         IPickeupable pickeupable;
         if (!other.TryGetComponent<IPickeupable>(out pickeupable)) return;
-        GunParts _gunParts;
-        if (other.TryGetComponent<GunParts>(out _gunParts)) {
-            _gunStats.UpgradeGun(_gunParts);
-            OnUpdateAmmo?.Invoke(gun.Ammo);
-        }
+        pickeupable.OnPickUp();
+
+        // GunParts _gunParts;
+        // if (other.TryGetComponent<GunParts>(out _gunParts)) {
+        //     _gunStats.UpgradeGun(_gunParts);
+        //     OnUpdateAmmo?.Invoke(gun.Ammo);
+        // }
     }
 
 
-    void AsignPlayerGun() {
-        gun = GunContainer.GetGun(_gunsType);
-    }
-    private void OnDisable() {
-        GunContainer.instance.OnCreate -= AsignPlayerGun;
-    }
-    private void OnEnable() {
-        GunContainer.instance.OnCreate += AsignPlayerGun;
+    // void AsignPlayerGun() {
+    //     gun = GunContainer.GetGun(_gunsType);
+    // }
+    // private void OnDisable() {
+    //     GunContainer.instance.OnCreate -= AsignPlayerGun;
+    // }
+    // private void OnEnable() {
+    //     GunContainer.instance.OnCreate += AsignPlayerGun;
 
-    }
+    // }
 }

@@ -10,10 +10,10 @@ public class GameManager : InstanceClass<GameManager> {
         _gunPool.IntantiateGuns(GunsEnum.GunsType.Pistol, 3);
     }
     private void OnDisable() {
-        GunContainer.instance.OnCreate -= CreateGunsForEnemy;
+        GunContainer.OnCreate -= CreateGunsForEnemy;
     }
     private void OnEnable() {
-        GunContainer.instance.OnCreate += CreateGunsForEnemy;
+        GunContainer.OnCreate += CreateGunsForEnemy;
 
     }
 }

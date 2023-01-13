@@ -13,9 +13,10 @@ public class GunContainer : InstanceClass<GunContainer> {
     public static Dictionary<GunsType, Gun> guns;
 
     public delegate void OnCreateGuns();
-    public event OnCreateGuns OnCreate;
+    public static event OnCreateGuns OnCreate;
 
-    private void Start() {
+    protected override void Awake() {
+        base.Awake();
         guns = new Dictionary<GunsType, Gun>();
         guns.Add(playerGun.Name, playerGun);
         guns.Add(pistol.Name, pistol);

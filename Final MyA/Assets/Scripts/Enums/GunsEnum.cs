@@ -8,4 +8,9 @@ namespace GunsEnum {
         Rifle,
         Shotgun
     }
+    public enum GunPart {
+        Stock,
+        Magazine,
+        Barrel,
+    }
 }

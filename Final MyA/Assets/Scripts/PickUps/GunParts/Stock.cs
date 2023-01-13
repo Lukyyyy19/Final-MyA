@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using GunsEnum;
 public class Stock : GunParts {
     [SerializeField]
     private float _addFirerate;
@@ -10,6 +10,11 @@ public class Stock : GunParts {
 
     void Start() {
         gunPart = GunPart.Stock;
+        InitialStats();
+    }
+
+    protected override void InitialStats() {
+        base.InitialStats();
         _addFirerate = GunContainer.GetGun(gunsType).FireRate;
         _addSpread = GunContainer.GetGun(gunsType).Spread;
     }
