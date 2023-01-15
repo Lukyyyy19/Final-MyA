@@ -12,7 +12,7 @@ public class PlayerManager : Entity {
     public delegate void UpdateAmmoDelegate(int bullet);
     public event UpdateAmmoDelegate OnUpdateAmmo;
 
-    GunStats _gunStats;
+    public GunStats _gunStats;
     protected override void Awake() {
         base.Awake();
         instance = this;
@@ -60,11 +60,11 @@ public class PlayerManager : Entity {
         IPickeupable pickeupable;
         if (!other.TryGetComponent<IPickeupable>(out pickeupable)) return;
         pickeupable.OnPickUp();
+        OnUpdateAmmo?.Invoke(gun.Ammo);
 
         // GunParts _gunParts;
         // if (other.TryGetComponent<GunParts>(out _gunParts)) {
-        //     _gunStats.UpgradeGun(_gunParts);
-        //     OnUpdateAmmo?.Invoke(gun.Ammo);
+        //     _gunStats.UpgradeGun(_gunParts._gunPartSo.);
         // }
     }
 

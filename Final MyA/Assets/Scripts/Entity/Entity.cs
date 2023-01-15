@@ -31,6 +31,9 @@ public class Entity : MonoBehaviour, IDamageable {
     public delegate void ShootDelegate();
     public event ShootDelegate OnShoot;
 
+    public delegate void CanShootDelegate();
+    public event ShootDelegate OnCanShoot;
+
     protected virtual void Awake() {
         _rb = GetComponent<Rigidbody2D>();
         _health = _maxHealth;
@@ -57,6 +60,7 @@ public class Entity : MonoBehaviour, IDamageable {
     }
 
     void CanShootAgain() {
+        OnCanShoot?.Invoke();
         _canShoot = true;
     }
 

@@ -16,6 +16,10 @@ public class Gun : ICloneable {
     private float _spread;
     public Action<GunsType, Gun> notify;
 
+    // private MiddlePart _middlePart;
+    // private Stock _stockPart;
+    // private Cannon _cannonPart;
+
     public Gun(float fireRate, string bulletType, int maxAmmo, float reloadTime, float damage, float spread, GunsType name, int bulletsQty) {
         _fireRate = fireRate;
         _bulletType = bulletType;
@@ -26,7 +30,16 @@ public class Gun : ICloneable {
         _damage = damage;
         _spread = spread;
         _bulletsQty = bulletsQty;
+
+
     }
+
+    // public Gun(MiddlePart middlePart, Stock stockPart, Cannon cannonPart, GunsType gunType) {
+    //     _middlePart = middlePart;
+    //     _stockPart = stockPart;
+    //     _cannonPart = cannonPart;
+    //     _name = gunType;
+    // }
 
     public void Configure(Action<GunsType, Gun> notify) {
         //ScreenManager.instance.AddPausable(this);
@@ -43,16 +56,6 @@ public class Gun : ICloneable {
     public float Damage { get => _damage; set => _damage = value; }
     public float Spread { get => _spread; set => _spread = value; }
 
-    // public float FireRate { get => _fireRate; }
-    // public string BulletType { get => _bulletType; }
-    // public int Ammo { get => _ammo; set => _ammo = value; }
-    // public int MaxAmmo { get => _maxAmmo; }
-    // public float ReloadTime { get => _reloadTime; }
-    // public GunsType Name { get => _name; }
-    // public float Damage { get => _damage; set => _damage = value; }
-    // public float Spread { get => _spread; }
-    // public int BulletsQty { get => _bulletsQty; }
-
     public void ClampValues() {
         _reloadTime = Mathf.Clamp(_reloadTime, .05f, 5);
         _spread = Mathf.Clamp(_spread, 0, 2);
@@ -61,6 +64,7 @@ public class Gun : ICloneable {
         _maxAmmo = Mathf.Clamp(_maxAmmo, 1, 999);
 
     }
+
     public object Clone() {
         return this.MemberwiseClone();
     }

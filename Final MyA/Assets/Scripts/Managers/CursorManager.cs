@@ -7,49 +7,79 @@ public class CursorManager : MonoBehaviour {
     [SerializeField]
     private PlayerManager _playerManager;
 
+    [SerializeField]
+    private Transform _crossHair;
 
     [SerializeField]
-    Texture2D[] _mouseTexArray;
+    private Animator _anim;
+
 
     [SerializeField]
-    private int frameCount;
+    private Transform _tipUp, _tipDown, _tipLeft, _tipRight, _lines;
     [SerializeField]
-    private float frameRate;
+    private float _maxDistance;
+    [SerializeField, Range(0, 1)]
+    float _speed;
+    [SerializeField]
+    float _timer;
 
-    private int currentFrame;
-    private float frameTimer;
+
+    private Camera _cam;
 
     private bool _playAnimation;
-    void Start() {
-        Cursor.SetCursor(_mouseTexArray[0], Vector2.one * _mouseTexArray[0].width / 2, CursorMode.Auto);
+    void Awake() {
+        _cam = Camera.main;
+        Cursor.visible = false;
+
     }
 
     private void Update() {
-        frameRate = _playerManager.gun.FireRate * .13f;
-        if (_playAnimation)
-            CursorAnimation();
+        _crossHair.position = Vector3.one;
+        _crossHair.position = (Vector2)_cam.ScreenToWorldPoint(_playerManager.playerInputs.MousePos);
+
+        // var targetDistance = _maxDistance;
+        if (_playAnimation) {
+            _timer += Time.deltaTime * _playerManager.gun.FireRate;
+            if (_timer >= 1) {
+                _timer = 1;
+                _playAnimation = false;
+            }
+        }
+        _lines.localEulerAngles = Vector3.Lerp(_lines.localEulerAngles, new Vector3(0, 0, 90), _timer);
     }
 
-    private void CursorAnimation() {
-        frameTimer -= Time.deltaTime;
-        if (frameTimer <= 0) {
-            frameTimer += frameRate;
-            currentFrame = (currentFrame + 1) % frameCount;
-            Cursor.SetCursor(_mouseTexArray[currentFrame], Vector2.one * _mouseTexArray[currentFrame].width / 2, CursorMode.Auto);
-            _playAnimation = currentFrame > 0;
-
-
-        }
+    private void OpenAim(float targetDistance) {
+        _tipUp.localPosition = Vector2.Lerp(_tipUp.localPosition, new Vector2(0, targetDistance), _timer);
+        _tipDown.localPosition = Vector2.Lerp(_tipDown.localPosition, new Vector2(0, -targetDistance), _timer);
+        _tipRight.localPosition = Vector2.Lerp(_tipRight.localPosition, new Vector2(targetDistance, 0), _timer);
+        _tipLeft.localPosition = Vector2.Lerp(_tipLeft.localPosition, new Vector2(-targetDistance, 0), _timer);
+    }
+    private void CloseAim(float targetDistance) {
+        _tipUp.localPosition = Vector2.Lerp(_tipUp.localPosition, Vector2.zero, _timer);
+        _tipDown.localPosition = Vector2.Lerp(_tipDown.localPosition, Vector2.zero, _timer);
+        _tipRight.localPosition = Vector2.Lerp(_tipRight.localPosition, Vector2.zero, _timer);
+        _tipLeft.localPosition = Vector2.Lerp(_tipLeft.localPosition, Vector2.zero, _timer);
     }
 
     void PlayAnimation() {
+        _lines.localEulerAngles = Vector3.zero;
+        _timer = 0;
         _playAnimation = true;
+        _anim.SetTrigger("Shoot");
+    }
+    public void PlayAnimationClose() {
+        // _timer = 0;
+        // _playAnimation = true;
+        _anim.SetTrigger("Close 0");
     }
 
     private void OnEnable() {
         _playerManager.OnShoot += PlayAnimation;
+        _playerManager.OnCanShoot += PlayAnimationClose;
+
     }
     private void OnDisable() {
         _playerManager.OnShoot -= PlayAnimation;
+        _playerManager.OnCanShoot -= PlayAnimationClose;
     }
 }
