@@ -49,7 +49,6 @@ public class PoolObject<T> {
             pool.Push(obj);
             if (turnOff != null)
                 turnOff(obj);
-            Debug.Log("Aniadianedo " + obj.ToString());
         }
     }
 

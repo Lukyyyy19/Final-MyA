@@ -1,19 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class GameManager : InstanceClass<GameManager> {
-
+using GunsEnum;
+public class GameManager : MonoBehaviour
+{
+    public static GameManager instance;
     public GunsPool _gunPool;
-
-    void CreateGunsForEnemy() {
-        _gunPool.IntantiateGuns(GunsEnum.GunsType.Pistol, 3);
+    public HashSet<Enemy> enemies;
+    private void Awake()
+    {
+        instance = this;
+        enemies = new HashSet<Enemy>();
     }
-    private void OnDisable() {
-        GunContainer.OnCreate -= CreateGunsForEnemy;
+    private void OnEnable()
+    {
+        EventManager.instance.AddAction("CreateGuns", CreateGunsForEnemy);
     }
-    private void OnEnable() {
-        GunContainer.OnCreate += CreateGunsForEnemy;
-
+    public void CreateGunsForEnemy()
+    {
+        Debug.Log("Creando armas enemgias");
+        _gunPool.IntantiateGuns(GunsType.Pistol, 3);
+    }
+    private void OnDisable()
+    {
+        EventManager.instance.RemoveAction("CreateGuns", CreateGunsForEnemy);
     }
 }

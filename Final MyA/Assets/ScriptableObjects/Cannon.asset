@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunpart: 2
   fireRate: -0.2
-  spread: -0.3
+  spread: 0.3
   bulletsPerShot: 2

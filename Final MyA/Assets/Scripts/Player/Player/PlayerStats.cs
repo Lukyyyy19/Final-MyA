@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class PlayerStats : MonoBehaviour {
+public class PlayerStats : MonoBehaviour
+{
 
     [SerializeField]
     PlayerManager _playerManager;
@@ -16,13 +17,15 @@ public class PlayerStats : MonoBehaviour {
     public TextMeshProUGUI _textSpread;
     public TextMeshProUGUI _textReloadTime;
 
-    void Start() {
+    void Start()
+    {
         _playerManager = GetComponent<PlayerManager>();
         UpdateAmmo(_playerManager.gun.Ammo);
 
     }
 
-    private void Update() {
+    private void Update()
+    {
         _textDamage.text = _playerManager.gun.Damage.ToString();
         _textFireRate.text = _playerManager.gun.FireRate.ToString();
         _textName.text = _playerManager.gun.Name.ToString();
@@ -30,14 +33,17 @@ public class PlayerStats : MonoBehaviour {
         _textReloadTime.text = _playerManager.gun.ReloadTime.ToString();
     }
 
-    private void UpdateAmmo(int bullet) {
+    private void UpdateAmmo(int bullet)
+    {
         _text.text = bullet.ToString();
     }
 
-    private void OnEnable() {
+    private void OnEnable()
+    {
         _playerManager.OnUpdateAmmo += UpdateAmmo;
     }
-    private void OnDisable() {
+    private void OnDisable()
+    {
         _playerManager.OnUpdateAmmo -= UpdateAmmo;
     }
 }
