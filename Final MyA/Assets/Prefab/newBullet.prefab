@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7106720252446627413}
   - component: {fileID: 1865973798142005191}
   - component: {fileID: -5799769430160891346}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: newBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,18 +50,6 @@ MonoBehaviour:
   currentSpeed: 0
   damage: 3
   destroyTime: 2
-  _bulletPool: {fileID: 0}
-  _bullets:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!212 &7106720252446627413
 SpriteRenderer:
   m_ObjectHideFlags: 0

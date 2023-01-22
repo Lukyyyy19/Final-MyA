@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InstantiateBullets : InstanceClass<InstantiateBullets>
-{
+public class InstantiateBullets : InstanceClass<InstantiateBullets> {
 
     [SerializeField]
     public BulletPool bulletPool;
@@ -17,9 +16,7 @@ public class InstantiateBullets : InstanceClass<InstantiateBullets>
     [SerializeField]
     private Bullet _disperseBullet;
 
-    protected override void Awake()
-    {
-        base.Awake();
+    protected void Start() {
         bulletPool.IntantiateBullets("Main Bullets", _mainBullet, 25);
         bulletPool.IntantiateBullets("Enemy Bullets", _enemyBullet, 25);
         bulletPool.IntantiateBullets("Mini Bullets", _miniBullet, 25);

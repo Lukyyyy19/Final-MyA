@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GunsEnum;
-public class PlayerManager : Entity
-{
+public class PlayerManager : Entity {
 
     public static PlayerManager instance;
     public PlayerInputs playerInputs;
@@ -15,8 +14,7 @@ public class PlayerManager : Entity
 
     public GunStats _gunStats;
     protected bool isPaused;
-    protected override void Awake()
-    {
+    protected override void Awake() {
         base.Awake();
         instance = this;
         playerInputs = new PlayerInputs();
@@ -25,50 +23,48 @@ public class PlayerManager : Entity
 
     }
 
-    void Update()
-    {
+    protected override void Start() {
+        AsignPlayerGun();
+        base.Start();
+        // GunContainer.instance.Init();
+    }
+
+    void Update() {
         if (!isPaused)
             playerInputs.ArtificialUpdate();
         _keyDirection.x = playerInputs.MovHor;
         _keyDirection.y = playerInputs.MovVer;
 
-        if (playerInputs.Fire)
-        {
+        if (playerInputs.Fire) {
             Shoot();
         }
-        if (playerInputs.Reload)
-        {
+        if (playerInputs.Reload) {
             Invoke("Reload", gun.ReloadTime);
         }
     }
 
-    protected override void Shoot()
-    {
+    protected override void Shoot() {
         base.Shoot();
         OnUpdateAmmo?.Invoke(gun.Ammo);
     }
 
-    protected override void Reload()
-    {
+    protected override void Reload() {
         base.Reload();
         OnUpdateAmmo?.Invoke(gun.Ammo);
 
     }
 
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         Move(_keyDirection);
     }
 
-    private void VariableChangeHandler(GunsType newGun)
-    {
+    private void VariableChangeHandler(GunsType newGun) {
         gun = GunContainer.GetGun(newGun);
         OnUpdateAmmo?.Invoke(gun.Ammo);
 
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
+    private void OnTriggerEnter2D(Collider2D other) {
         IPickeupable pickeupable;
         if (!other.TryGetComponent<IPickeupable>(out pickeupable)) return;
         pickeupable.OnPickUp();
@@ -81,27 +77,23 @@ public class PlayerManager : Entity
     }
 
 
-    void AsignPlayerGun()
-    {
+    void AsignPlayerGun() {
+        Debug.Log("Creando arma player");
         gun = GunContainer.GetGun(_gunsType);
+        _gunStats.Init();
     }
-    protected override void OnDisable()
-    {
+    protected override void OnDisable() {
         base.OnDisable();
         EventManager.instance.RemoveAction("CreateGuns", AsignPlayerGun);
     }
-    private void OnEnable()
-    {
-        EventManager.instance.AddAction("CreateGuns", AsignPlayerGun);
+    private void OnEnable() {
 
     }
-    public override void Pause()
-    {
+    public override void Pause() {
         base.Pause();
         isPaused = true;
     }
-    public override void Resume()
-    {
+    public override void Resume() {
         base.Resume();
         isPaused = false;
     }

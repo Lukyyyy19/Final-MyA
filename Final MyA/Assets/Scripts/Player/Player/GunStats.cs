@@ -34,9 +34,8 @@ public class GunStats : MonoBehaviour {
     public StockSO _currentStock;
 
 
-    void Start() {
+    public void Init() {
         gun = PlayerManager.instance.gun;
-
         _initialBullets = gun.MaxAmmo;
         _initialbulletsPerShot = gun.BulletsQty;
         _initialbulletType = gun.BulletType;
@@ -44,10 +43,6 @@ public class GunStats : MonoBehaviour {
         _initialFirerate = gun.FireRate;
         _initialReloadTime = gun.ReloadTime;
         _initialSpread = gun.Spread;
-
-    }
-    private void Update() {
-        Debug.Log(upgrades.Count);
     }
 
     public void UpgradeGun(StockSO gunPart) {
