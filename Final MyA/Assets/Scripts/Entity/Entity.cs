@@ -29,16 +29,35 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
     [SerializeField]
     protected Transform _hand;
 
+    [SerializeField]
+    protected bool _canDash = true;
+    protected bool _isDashing;
+    [SerializeField]
+    protected float dashSpeed;
+    [SerializeField]
+    protected bool _startDash;
+    [SerializeField]
+    private float _startTimeFloat = .1f;
+    [SerializeField]
+    private float _timer;
+    private bool _startTime;
+
+
+
+
     public delegate void ShootDelegate();
     public event ShootDelegate OnShoot;
 
     public delegate void CanShootDelegate();
     public event ShootDelegate OnCanShoot;
 
+    [SerializeField]
+    protected ParticleSystem particleDead;
     protected virtual void Awake() {
         _rb = GetComponent<Rigidbody2D>();
         _health = _maxHealth;
         _speed = _maxSpeed;
+        _timer = _startTimeFloat;
     }
     protected virtual void Start() {
 
@@ -77,9 +96,30 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
     }
 
     protected virtual void Die() {
+        //HACER POOL
+        var currParticle = Instantiate(particleDead, transform.position, Quaternion.identity);
         gameObject.SetActive(false);
+
     }
 
+    protected void Attack(Vector2 dir) {
+        if (_timer <= 0) {
+            _timer = _startTimeFloat;
+            _rb.velocity = Vector2.zero;
+            _isDashing = false;
+            _startDash = false;
+            StartCoroutine("DashAgain");
+        } else {
+            _timer -= Time.deltaTime;
+            _isDashing = true;
+            _canDash = false;
+            _rb.velocity = dir * dashSpeed;
+        }
+    }
+    IEnumerator DashAgain() {
+        yield return new WaitForSeconds(1f);
+        _canDash = true;
+    }
 
     protected void Move(Vector2 dir) {
         _rb.velocity = dir.normalized * _speed;

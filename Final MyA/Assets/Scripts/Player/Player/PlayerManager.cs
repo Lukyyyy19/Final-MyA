@@ -41,6 +41,17 @@ public class PlayerManager : Entity {
         if (playerInputs.Reload) {
             Invoke("Reload", gun.ReloadTime);
         }
+        if (playerInputs.Dash && _canDash) {
+            _startDash = true;
+        }
+        if (_startDash) {
+            Attack(_keyDirection);
+        }
+    }
+    private void FixedUpdate() {
+        if (!_isDashing)
+            Move(_keyDirection);
+
     }
 
     protected override void Shoot() {
@@ -54,9 +65,6 @@ public class PlayerManager : Entity {
 
     }
 
-    private void FixedUpdate() {
-        Move(_keyDirection);
-    }
 
     private void VariableChangeHandler(GunsType newGun) {
         gun = GunContainer.GetGun(newGun);
