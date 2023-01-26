@@ -18,6 +18,7 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
     [SerializeField]
     protected bool _canShoot;
 
+    [SerializeField]
     protected int _health;
 
     [SerializeField]
@@ -41,6 +42,8 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
     [SerializeField]
     private float _timer;
     private bool _startTime;
+
+    protected bool paused;
 
 
 
@@ -68,6 +71,7 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
         if (gun == null) return;
         if (!_canShoot) return;
         if (gun.Ammo < 1) return;
+        if (paused) return;
         OnShoot?.Invoke();
         _canShoot = false;
         for (int i = 0; i < gun.BulletsQty; i++) {
@@ -102,7 +106,7 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
 
     }
 
-    protected void Attack(Vector2 dir) {
+    protected virtual void Attack(Vector2 dir) {
         if (_timer <= 0) {
             _timer = _startTimeFloat;
             _rb.velocity = Vector2.zero;
@@ -138,10 +142,14 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
     public virtual void Pause() {
         _speed = 0;
         _rb.isKinematic = true;
+        paused = true;
+
     }
 
     public virtual void Resume() {
         _speed = _maxSpeed;
         _rb.isKinematic = false;
+        paused = false;
+
     }
 }

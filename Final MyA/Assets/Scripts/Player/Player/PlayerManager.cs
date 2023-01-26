@@ -14,6 +14,13 @@ public class PlayerManager : Entity {
 
     public GunStats _gunStats;
     protected bool isPaused;
+
+    [SerializeField]
+    private TrailRenderer _trail;
+
+    [SerializeField]
+    private bool _invencible;
+
     protected override void Awake() {
         base.Awake();
         instance = this;
@@ -45,9 +52,16 @@ public class PlayerManager : Entity {
             _startDash = true;
         }
         if (_startDash) {
+            _trail.enabled = true;
+            _invencible = true;
             Attack(_keyDirection);
         }
+        if (!_isDashing) {
+            _invencible = false;
+            _trail.enabled = false;
+        }
     }
+
     private void FixedUpdate() {
         if (!_isDashing)
             Move(_keyDirection);
@@ -94,9 +108,11 @@ public class PlayerManager : Entity {
         base.OnDisable();
         EventManager.instance.RemoveAction("CreateGuns", AsignPlayerGun);
     }
-    private void OnEnable() {
-
+    public override void TakeDamage(int damage) {
+        if (!_invencible)
+            base.TakeDamage(damage);
     }
+
     public override void Pause() {
         base.Pause();
         isPaused = true;
