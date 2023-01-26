@@ -38,6 +38,10 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
     [SerializeField]
     protected bool _startDash;
     [SerializeField]
+    protected float dashCooldown;
+
+
+    [SerializeField]
     private float _startTimeFloat = .1f;
     [SerializeField]
     private float _timer;
@@ -45,6 +49,9 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
 
     protected bool paused;
 
+    protected Collider2D colldier;
+
+    protected SpriteRenderer sr;
 
 
 
@@ -61,6 +68,8 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
         _health = _maxHealth;
         _speed = _maxSpeed;
         _timer = _startTimeFloat;
+        colldier = GetComponent<Collider2D>();
+        sr = GetComponent<SpriteRenderer>();
     }
     protected virtual void Start() {
 
@@ -98,10 +107,17 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
         gun.Ammo = gun.MaxAmmo;
 
     }
-
+    public virtual void TakeDamage(int damage) {
+        _health -= damage;
+        if (_health <= 0) {
+            Die();
+        }
+    }
     protected virtual void Die() {
         //HACER POOL
         var currParticle = Instantiate(particleDead, transform.position, Quaternion.identity);
+        var pm = currParticle.main;
+        pm.startColor = sr.color;
         gameObject.SetActive(false);
 
     }
@@ -109,19 +125,21 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
     protected virtual void Attack(Vector2 dir) {
         if (_timer <= 0) {
             _timer = _startTimeFloat;
+            colldier.isTrigger = false;
             _rb.velocity = Vector2.zero;
             _isDashing = false;
             _startDash = false;
             StartCoroutine("DashAgain");
         } else {
             _timer -= Time.deltaTime;
+            colldier.isTrigger = true;
             _isDashing = true;
             _canDash = false;
             _rb.velocity = dir * dashSpeed;
         }
     }
     IEnumerator DashAgain() {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(dashCooldown);
         _canDash = true;
     }
 
@@ -129,12 +147,7 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
         _rb.velocity = dir.normalized * _speed;
     }
 
-    public virtual void TakeDamage(int damage) {
-        _health -= damage;
-        if (_health <= 0) {
-            Die();
-        }
-    }
+
     protected virtual void OnDisable() {
         ScreenManager.instance.RemovePausable(this);
     }

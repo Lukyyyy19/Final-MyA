@@ -13,9 +13,7 @@ public class GameManager : MonoBehaviour {
         enemies = new HashSet<Enemy>();
         _eventManager.AddAction("CreateGuns", CreateGunsForEnemy);
     }
-    private void Start() {
 
-    }
     public void CreateGunsForEnemy() {
         Debug.Log("Creando armas enemgias");
         _gunPool.IntantiateGuns(GunsType.Pistol, 3);

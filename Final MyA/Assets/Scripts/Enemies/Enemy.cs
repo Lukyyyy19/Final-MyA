@@ -5,56 +5,51 @@ using UnityEngine;
 public class Enemy : Entity {
 
     [SerializeField]
-    private Transform _target;
-    private float _currentSpeed;
-    private Vector2 _velocity;
+    protected Transform _target;
+    protected float _currentSpeed;
+    protected Vector2 _velocity;
     [SerializeField]
-    private float viewRange;
+    protected float viewRange;
 
-    private float radiusSeparation = 5.3f;
+    protected float radiusSeparation = 5.3f;
     [SerializeField]
     protected Vector2 steering;
 
-    private float dist;
+    protected float dist;
 
-    [SerializeField]
-    private float shootDist;
 
 
     protected override void Start() {
         base.Start();
         radiusSeparation = 5.3f;
         GameManager.instance.enemies.Add(this);
-        //EventManager.instance.AddAction("CreateGuns", AsignGun);
         _target = PlayerManager.instance.transform;
         _currentSpeed = _speed;
-        AsignGun();
-
     }
 
-    private void AsignGun() {
-        Debug.Log("Asignando arma enemigo");
-        gun = GameManager.instance._gunPool.Get(_gunsType);
-    }
+    // private void AsignGun() {
+    //     Debug.Log("Asignando arma enemigo");
+    //     gun = GameManager.instance._gunPool.Get(_gunsType);
+    // }
 
-    void Update() {
-        UpdateHandPos();
-        Move(Arrive(_target.position) + (Vector2)Separation());
-        if (gun.Ammo < 1) {
-            Reload();
-        }
-        RaycastHit2D hitInfo = Physics2D.Raycast(_firePoint.position, _target.position - _firePoint.position, shootDist);
-        Debug.DrawLine(_firePoint.position, _target.position, Color.black, 1);
-        if (hitInfo.transform == null) return;
-        if (hitInfo.transform.CompareTag("Player")) {
-            if (dist <= shootDist) {
-                _rb.velocity = Vector2.zero;
-                Shoot();
-            }
-        }
-    }
+    // void Update() {
+    //     UpdateHandPos();
+    //     Move(Arrive(_target.position) + (Vector2)Separation());
+    //     if (gun.Ammo < 1) {
+    //         Reload();
+    //     }
+    //     RaycastHit2D hitInfo = Physics2D.Raycast(_firePoint.position, _target.position - _firePoint.position, shootDist);
+    //     Debug.DrawLine(_firePoint.position, _target.position, Color.black, 1);
+    //     if (hitInfo.transform == null) return;
+    //     if (hitInfo.transform.CompareTag("Player")) {
+    //         if (dist <= shootDist) {
+    //             _rb.velocity = Vector2.zero;
+    //             Shoot();
+    //         }
+    //     }
+    // }
 
-    private void UpdateHandPos() {
+    protected void UpdateHandPos() {
         var _dir = _target.position - _hand.position;
         float angle = Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg;
         _hand.rotation = Quaternion.Euler(new Vector3(0, 0, angle + 90));
@@ -75,7 +70,7 @@ public class Enemy : Entity {
         return steering;
     }
 
-    Vector3 Separation() {
+    protected Vector3 Separation() {
         Vector3 desired = Vector3.zero;
 
         foreach (var item in GameManager.instance.enemies) {
@@ -97,22 +92,6 @@ public class Enemy : Entity {
     }
 
 
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, viewRange);
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, radiusSeparation);
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, shootDist);
 
-    }
 
-    protected override void OnDisable() {
-        base.OnDisable();
-        gun.notify.Invoke(gun.Name, gun);
-    }
-
-    private void OnEnable() {
-
-    }
 }
