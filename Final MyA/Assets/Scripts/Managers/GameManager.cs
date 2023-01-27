@@ -14,6 +14,13 @@ public class GameManager : MonoBehaviour {
         _eventManager.AddAction("CreateGuns", CreateGunsForEnemy);
     }
 
+    IEnumerator DieStopTime() {
+        Debug.Log("Stop TIme");
+        ScreenManager.instance.Pause();
+        yield return new WaitForSeconds(.05f);
+        ScreenManager.instance.Resume();
+    }
+
     public void CreateGunsForEnemy() {
         Debug.Log("Creando armas enemgias");
         _gunPool.IntantiateGuns(GunsType.Pistol, 3);

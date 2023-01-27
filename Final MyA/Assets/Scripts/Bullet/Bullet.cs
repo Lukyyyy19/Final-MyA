@@ -47,7 +47,6 @@ public class Bullet : MonoBehaviour, IPausable {
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log(other.name);
         notify.Invoke(key, this);
         if (other.GetComponent<IDamageable>() != null) {
             other.GetComponent<IDamageable>().TakeDamage((int)damage);

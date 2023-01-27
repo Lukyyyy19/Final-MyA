@@ -52,6 +52,7 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
     protected Collider2D colldier;
 
     protected SpriteRenderer sr;
+    private Color _mainColor;
 
 
 
@@ -70,6 +71,7 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
         _timer = _startTimeFloat;
         colldier = GetComponent<Collider2D>();
         sr = GetComponent<SpriteRenderer>();
+        _mainColor = sr.color;
     }
     protected virtual void Start() {
 
@@ -109,19 +111,34 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
     }
     public virtual void TakeDamage(int damage) {
         _health -= damage;
+        sr.color = Color.white;
+        Invoke("ResetColor", 0.05f);
         if (_health <= 0) {
             Die();
         }
     }
     protected virtual void Die() {
         //HACER POOL
+        sr.enabled = false;
+        _rb.isKinematic = true;
+        ResetColor();
         var currParticle = Instantiate(particleDead, transform.position, Quaternion.identity);
         var pm = currParticle.main;
         pm.startColor = sr.color;
-        gameObject.SetActive(false);
+        StartCoroutine("DieStopTime");
 
     }
 
+    IEnumerator DieStopTime() {
+        Debug.Log("Stop TIme");
+        ScreenManager.instance.Pause();
+        yield return new WaitForSeconds(.07f);
+        ScreenManager.instance.Resume();
+        gameObject.SetActive(false);
+    }
+    void ResetColor() {
+        sr.color = _mainColor;
+    }
     protected virtual void Attack(Vector2 dir) {
         if (_timer <= 0) {
             _timer = _startTimeFloat;

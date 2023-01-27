@@ -39,6 +39,7 @@ public class ScreenManager : MonoBehaviour {
     }
 
     public void Resume() {
+        Debug.Log("resuimng");
         foreach (var item in pausables) {
             item.Resume();
         }
