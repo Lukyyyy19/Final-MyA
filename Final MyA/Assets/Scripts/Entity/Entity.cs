@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GunsEnum;
-public class Entity : MonoBehaviour, IDamageable, IPausable {
+public abstract class Entity : MonoBehaviour, IDamageable, IPausable {
 
     protected float _speed;
     [SerializeField]
@@ -54,6 +54,7 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
     protected SpriteRenderer sr;
     private Color _mainColor;
 
+    protected bool isMoving;
 
 
     public delegate void ShootDelegate();
@@ -125,17 +126,10 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
         var currParticle = Instantiate(particleDead, transform.position, Quaternion.identity);
         var pm = currParticle.main;
         pm.startColor = sr.color;
-        StartCoroutine("DieStopTime");
-
-    }
-
-    IEnumerator DieStopTime() {
-        Debug.Log("Stop TIme");
-        ScreenManager.instance.Pause();
-        yield return new WaitForSeconds(.07f);
-        ScreenManager.instance.Resume();
         gameObject.SetActive(false);
     }
+
+
     void ResetColor() {
         sr.color = _mainColor;
     }
@@ -152,7 +146,7 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
             colldier.isTrigger = true;
             _isDashing = true;
             _canDash = false;
-            _rb.velocity = dir * dashSpeed;
+            _rb.velocity = dir.normalized * dashSpeed;
         }
     }
     IEnumerator DashAgain() {
@@ -162,6 +156,8 @@ public class Entity : MonoBehaviour, IDamageable, IPausable {
 
     protected void Move(Vector2 dir) {
         _rb.velocity = dir.normalized * _speed;
+        isMoving = _rb.velocity.magnitude > 0;
+
     }
 
 

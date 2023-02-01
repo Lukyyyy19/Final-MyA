@@ -91,6 +91,10 @@ public class Enemy : Entity {
         return desired;
     }
 
+    protected override void Die() {
+        base.Die();
+        PlayerManager.instance.EnemyKill();
+    }
 
 
 

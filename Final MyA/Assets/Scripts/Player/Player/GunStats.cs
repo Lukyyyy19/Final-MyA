@@ -33,6 +33,8 @@ public class GunStats : MonoBehaviour {
     public CannonSO _currentCannon;
     public StockSO _currentStock;
 
+    public GunPart gunPicked;
+
 
     public void Init() {
         gun = PlayerManager.instance.gun;

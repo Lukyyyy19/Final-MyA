@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class ScreenManager : MonoBehaviour {
     public static ScreenManager instance;
-    private bool isPaused = true;
-    bool isResumed;
+
     private void Awake() {
         instance = this;
     }
@@ -15,31 +14,14 @@ public class ScreenManager : MonoBehaviour {
     public void AddPausable(IPausable pausable) => pausables.Add(pausable);
     public void RemovePausable(IPausable pausable) => pausables.Remove(pausable);
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.P))
-            isPaused = !isPaused;
-        switch (isPaused) {
-            case false:
-                Pause();
-                isResumed = false;
-                break;
-            default:
-                if (!isResumed) {
-                    Resume();
-                    isResumed = true;
-                }
-                break;
-        }
-    }
-
     public void Pause() {
+        Debug.Log("Pause");
         foreach (var item in pausables) {
             item.Pause();
         }
     }
 
     public void Resume() {
-        Debug.Log("resuimng");
         foreach (var item in pausables) {
             item.Resume();
         }
