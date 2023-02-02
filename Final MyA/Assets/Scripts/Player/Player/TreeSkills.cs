@@ -34,13 +34,13 @@ public class TreeSkills {
         }
     }
     private void UnlockSkill(PlayerSkills skill) {
-        if (abilityPoints >= abilityPointsDic[skill]) {
+        if (abilityPoints >= abilityPointsDic[skill] && !IsUpgradeUnlocked(skill)) {
             abilityPoints -= abilityPointsDic[skill];
             unlockedSkills.Add(skill);
             OnSkillUnlocked?.Invoke(skill);
             Debug.Log($"Hablilidad desbloqueda: {skill}");
         } else {
-            Debug.Log($"No tienes los puntos necesarios para desbloquear {skill}");
+            Debug.Log($"No tienes los puntos necesarios para desbloquear {skill} o ya esta desbloqueda");
         }
     }
 

@@ -20,7 +20,8 @@ public class PlayerManager : Entity {
 
     [SerializeField]
     private TrailRenderer _trail;
-
+    [SerializeField]
+    private ParticleSystem _dashParticle;
     private TreeSkills _treeSkills;
 
 
@@ -80,6 +81,8 @@ public class PlayerManager : Entity {
         }
         if (_startDash) {
             _trail.enabled = true;
+            _trail.startColor = GetHealthColor();
+            _trail.endColor = GetHealthColor();
             _invencible = true;
             Attack(_keyDirection);
         }
@@ -89,6 +92,7 @@ public class PlayerManager : Entity {
         }
 
         playerAnimation.SetBoolParam("IsMoving", isMoving);
+        if (Input.GetKeyDown(KeyCode.F1)) _treeSkills.abilityPoints++;
     }
 
     private void FixedUpdate() {
@@ -159,16 +163,26 @@ public class PlayerManager : Entity {
         EventManager.instance.RemoveAction("CreateGuns", AsignPlayerGun);
     }
     public override void TakeDamage(int damage) {
-        if (!_invencible)
+        if (!_invencible) {
             base.TakeDamage(damage);
+            UpdateVisualHealth();
+
+        }
+    }
+
+    private void UpdateVisualHealth() {
+        float healthVisual = (float)_health / (float)_maxHealth;
+        sr.material.SetFloat("_Health", healthVisual);
     }
 
     public override void Pause() {
         base.Pause();
         isPaused = true;
+        playerAnimation.StopAnimation();
     }
     public override void Resume() {
         base.Resume();
+        playerAnimation.ResumeAnimation();
         isPaused = false;
     }
 
@@ -188,5 +202,12 @@ public class PlayerManager : Entity {
         if (xValue < 0) localScale.x = Mathf.Abs(localScale.x) * -1;
         else if (xValue > 0) localScale.x = Mathf.Abs(localScale.x);
         transform.localScale = localScale;
+    }
+
+    Color GetHealthColor() {
+        var damagedColor = sr.material.GetColor("_damaged");
+        var fullHealthColor = sr.material.GetColor("_fullHealth");
+        var t = sr.material.GetFloat("_Health");
+        return Color.Lerp(damagedColor, fullHealthColor, t);
     }
 }

@@ -54,7 +54,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IPausable {
     protected SpriteRenderer sr;
     private Color _mainColor;
 
-    protected bool isMoving;
+    public bool isMoving;
 
 
     public delegate void ShootDelegate();
@@ -63,8 +63,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IPausable {
     public delegate void CanShootDelegate();
     public event ShootDelegate OnCanShoot;
 
-    [SerializeField]
-    protected ParticleSystem particleDead;
+
     protected virtual void Awake() {
         _rb = GetComponent<Rigidbody2D>();
         _health = _maxHealth;
@@ -91,7 +90,6 @@ public abstract class Entity : MonoBehaviour, IDamageable, IPausable {
             Vector2 dir = _hand.rotation * Vector2.down;
             Vector2 pdir = Vector2.Perpendicular(dir) * Random.Range(-gun.Spread, gun.Spread);
             var bullet = InstantiateBullets.instance.bulletPool.Get(gun.BulletType, _firePoint.position, (dir + pdir));
-            //Cambiar de Layer para que nuestra bala no nos golpee
             bullet.damage = gun.Damage;
 
         }
@@ -119,18 +117,11 @@ public abstract class Entity : MonoBehaviour, IDamageable, IPausable {
         }
     }
     protected virtual void Die() {
-        //HACER POOL
-        sr.enabled = false;
-        _rb.isKinematic = true;
-        ResetColor();
-        var currParticle = Instantiate(particleDead, transform.position, Quaternion.identity);
-        var pm = currParticle.main;
-        pm.startColor = sr.color;
         gameObject.SetActive(false);
     }
 
 
-    void ResetColor() {
+    protected void ResetColor() {
         sr.color = _mainColor;
     }
     protected virtual void Attack(Vector2 dir) {
@@ -166,6 +157,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IPausable {
     }
 
     public virtual void Pause() {
+        _rb.velocity = Vector2.zero;
         _speed = 0;
         _rb.isKinematic = true;
         paused = true;

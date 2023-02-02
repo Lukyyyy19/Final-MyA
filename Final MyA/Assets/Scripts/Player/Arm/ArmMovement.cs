@@ -18,6 +18,9 @@ public class ArmMovement : MonoBehaviour, IPausable {
         gunSr = GetComponentInChildren<SpriteRenderer>();
 
     }
+    private void Start() {
+        _playerManager.OnUpdateAmmo += UpdateGunVisuals;
+    }
 
     void Update() {
         if (canMoveHand)
@@ -32,7 +35,7 @@ public class ArmMovement : MonoBehaviour, IPausable {
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle + 90));
 
         if (angle < 120 && angle > 50) {
-            gunSr.sortingOrder = -1;
+            gunSr.sortingOrder = _playerManager.isMoving ? -1 : 1;
             IsLookingUp = true;
         } else {
             gunSr.sortingOrder = 1;
@@ -46,10 +49,8 @@ public class ArmMovement : MonoBehaviour, IPausable {
     private void FlipGun(float angle) {
         Vector3 localScale = Vector3.one;
         if (angle > 90 || angle < -90) {
-            //localScale.x = -1;
             _playerManager.FlipPlayer(1);
         } else {
-            //localScale.x = 1;
             _playerManager.FlipPlayer(-1);
         }
         transform.localScale = localScale;
@@ -61,5 +62,10 @@ public class ArmMovement : MonoBehaviour, IPausable {
 
     public void Resume() {
         canMoveHand = true;
+    }
+
+    void UpdateGunVisuals(int Ammo) {
+        float newAmmo = (float)Ammo / ((float)_playerManager.gun.MaxAmmo / 2f);
+        gunSr.material.SetFloat("_Ammo", newAmmo);
     }
 }

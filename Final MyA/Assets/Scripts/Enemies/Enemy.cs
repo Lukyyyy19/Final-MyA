@@ -17,7 +17,8 @@ public class Enemy : Entity {
 
     protected float dist;
 
-
+    [SerializeField]
+    protected ParticleSystem particleDead;
 
     protected override void Start() {
         base.Start();
@@ -93,6 +94,12 @@ public class Enemy : Entity {
 
     protected override void Die() {
         base.Die();
+        sr.enabled = false;
+        _rb.isKinematic = true;
+        ResetColor();
+        var currParticle = Instantiate(particleDead, transform.position, Quaternion.identity);
+        var pm = currParticle.main;
+        pm.startColor = sr.color;
         PlayerManager.instance.EnemyKill();
     }
 
