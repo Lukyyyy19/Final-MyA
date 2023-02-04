@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ScreenManager : MonoBehaviour {
     public static ScreenManager instance;
-
+    public bool isPaused;
     private void Awake() {
         instance = this;
     }
@@ -15,13 +15,14 @@ public class ScreenManager : MonoBehaviour {
     public void RemovePausable(IPausable pausable) => pausables.Remove(pausable);
 
     public void Pause() {
-        Debug.Log("Pause");
+        isPaused = true;
         foreach (var item in pausables) {
             item.Pause();
         }
     }
 
     public void Resume() {
+        isPaused = false;
         foreach (var item in pausables) {
             item.Resume();
         }

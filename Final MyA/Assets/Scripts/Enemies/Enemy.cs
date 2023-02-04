@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class Enemy : Entity {
 
     [SerializeField]
@@ -19,6 +19,13 @@ public class Enemy : Entity {
 
     [SerializeField]
     protected ParticleSystem particleDead;
+    [SerializeField]
+    protected ParticleSystem particleAppear;
+
+    protected bool _isSpawning;
+
+    string key;
+    Action<string, Enemy> notify;
 
     protected override void Start() {
         base.Start();
@@ -27,28 +34,32 @@ public class Enemy : Entity {
         _target = PlayerManager.instance.transform;
         _currentSpeed = _speed;
     }
+    public virtual void Configure(string _key, Action<string, Enemy> notify) {
+        key = _key;
+        this.notify = notify;
+    }
+    protected virtual void Update() {
+        UpdateHandPos();
+    }
 
-    // private void AsignGun() {
-    //     Debug.Log("Asignando arma enemigo");
-    //     gun = GameManager.instance._gunPool.Get(_gunsType);
-    // }
 
-    // void Update() {
-    //     UpdateHandPos();
-    //     Move(Arrive(_target.position) + (Vector2)Separation());
-    //     if (gun.Ammo < 1) {
-    //         Reload();
-    //     }
-    //     RaycastHit2D hitInfo = Physics2D.Raycast(_firePoint.position, _target.position - _firePoint.position, shootDist);
-    //     Debug.DrawLine(_firePoint.position, _target.position, Color.black, 1);
-    //     if (hitInfo.transform == null) return;
-    //     if (hitInfo.transform.CompareTag("Player")) {
-    //         if (dist <= shootDist) {
-    //             _rb.velocity = Vector2.zero;
-    //             Shoot();
-    //         }
-    //     }
-    // }
+    public IEnumerator OnAppear() {
+        ScreenManager.instance.AddPausable(this);
+        _isSpawning = true;
+        sr.enabled = false;
+        _hand.gameObject.SetActive(false);
+        _rb.isKinematic = true;
+        // gameObject.SetActive(false);
+        var ps = Instantiate(particleAppear, transform.position, Quaternion.identity);
+        yield return new WaitUntil(() => ps.isStopped);
+        Destroy(ps.gameObject);
+        sr.enabled = true;
+        _hand.gameObject.SetActive(true);
+        _rb.isKinematic = false;
+        _isSpawning = false;
+        // gameObject.SetActive(true);
+        _health = _maxHealth;
+    }
 
     protected void UpdateHandPos() {
         var _dir = _target.position - _hand.position;
@@ -101,8 +112,22 @@ public class Enemy : Entity {
         var pm = currParticle.main;
         pm.startColor = sr.color;
         PlayerManager.instance.EnemyKill();
+        GameManager.instance.RemoveEnemyFormHash(this);
+        notify.Invoke(key, this);
+    }
+    public void Reactivate() {
+        sr.enabled = true;
+        _rb.isKinematic = false;
+        ScreenManager.instance.AddPausable(this);
     }
 
+    public void SetInitalPos(Vector2 position) {
+        transform.position = position;
+    }
+
+    private void OnEnable() {
+        ScreenManager.instance.AddPausable(this);
+    }
 
 
 }

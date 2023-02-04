@@ -56,6 +56,7 @@ public class PlayerStats : MonoBehaviour {
     }
     private void OnDisable() {
         _playerManager.OnUpdateAmmo -= UpdateAmmo;
+        EventManager.instance.RemoveAction("OnNewLevel", NewLevelReached);
     }
 
     public void NewLevelReached() {

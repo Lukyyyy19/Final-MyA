@@ -3,37 +3,65 @@ using System.Collections.Generic;
 using UnityEngine;
 using GunsEnum;
 using UpgradesEnum;
-public class PlayerManager : Entity {
-
-    public static PlayerManager instance;
-    public PlayerInputs playerInputs;
-    public PlayerAnimation playerAnimation;
-
-
-    private Vector2 _keyDirection;
+public class PlayerManager : EntityShoot {
 
     public delegate void UpdateAmmoDelegate(int bullet);
     public event UpdateAmmoDelegate OnUpdateAmmo;
 
-    public GunStats _gunStats;
     protected bool isPaused;
+    private Vector2 _keyDirection;
 
+    [Header("Components")]
     [SerializeField]
     private TrailRenderer _trail;
     [SerializeField]
     private ParticleSystem _dashParticle;
+    [SerializeField]
+    private BoxCollider2D _wallCollider;
+    public GunStats _gunStats;
+    public static PlayerManager instance;
+    public PlayerInputs playerInputs;
+    public PlayerAnimation playerAnimation;
     private TreeSkills _treeSkills;
 
 
-    [SerializeField]
-    private bool _invencible;
-
+    [HideInInspector]
     public float reloadTimer;
+    [HideInInspector]
     public float reloadTimerStart;
 
+    [Header("Level Count")]
+    [SerializeField]
     private int enemyDeadCounter;
     [SerializeField]
     private int nextLevel = 3;
+
+    [Header("Raycasting")]
+    [SerializeField]
+    private LayerMask _layerWall;
+    [SerializeField]
+    private float radius;
+
+    [Header("Dash")]
+    [SerializeField]
+    private bool _invencible;
+    [SerializeField]
+    protected bool _canDash = true;
+    protected bool _isDashing;
+    [SerializeField]
+    protected float dashSpeed;
+    [SerializeField]
+    protected bool _startDash;
+    [SerializeField]
+    protected float dashCooldown;
+    [SerializeField]
+    private float _startTimeFloat = .1f;
+    [SerializeField]
+    private float _timer;
+    private bool _startTime;
+
+
+
 
     public TreeSkills TreeSkills { get => _treeSkills; }
 
@@ -42,6 +70,7 @@ public class PlayerManager : Entity {
         instance = this;
         playerInputs = new PlayerInputs();
         _gunStats = GetComponentInChildren<GunStats>();
+        _timer = _startTimeFloat;
         playerAnimation = GetComponent<PlayerAnimation>();
         _treeSkills = new TreeSkills();
         _treeSkills.Init();
@@ -62,6 +91,7 @@ public class PlayerManager : Entity {
         _keyDirection.x = playerInputs.MovHor;
         _keyDirection.y = playerInputs.MovVer;
 
+
         if (gun.Ammo < 1) {
             reloadTimer += Time.deltaTime;
             Invoke("Reload", gun.ReloadTime);
@@ -80,6 +110,7 @@ public class PlayerManager : Entity {
             _startDash = true;
         }
         if (_startDash) {
+            _wallCollider.enabled = true;
             _trail.enabled = true;
             _trail.startColor = GetHealthColor();
             _trail.endColor = GetHealthColor();
@@ -87,6 +118,7 @@ public class PlayerManager : Entity {
             Attack(_keyDirection);
         }
         if (!_isDashing) {
+            _wallCollider.enabled = false;
             _invencible = false;
             _trail.enabled = false;
         }
@@ -110,7 +142,6 @@ public class PlayerManager : Entity {
         base.Reload();
         OnUpdateAmmo?.Invoke(gun.Ammo);
         reloadTimer = 0;
-        Debug.Log("Arma cargada metodo");
     }
 
     public void UpdateReloadTimer(float time) {
@@ -132,7 +163,7 @@ public class PlayerManager : Entity {
     }
 
     public void EnemyKill() {
-        StartCoroutine("DieStopTime");
+        // StartCoroutine("DieStopTime");
         enemyDeadCounter++;
         if (enemyDeadCounter >= nextLevel) {
             LevelUp();
@@ -141,8 +172,9 @@ public class PlayerManager : Entity {
 
     private void LevelUp() {
         _treeSkills.abilityPoints++;
-        Debug.Log("nivel nuevo");
-        nextLevel = Mathf.CeilToInt(nextLevel * 1.5f);
+        GameManager.instance._menuManagerUI.ShowPauseMenu();
+        nextLevel = Mathf.CeilToInt(nextLevel * 2.5f);
+        ScreenManager.instance.Pause();
     }
 
     protected IEnumerator DieStopTime() {
@@ -153,7 +185,6 @@ public class PlayerManager : Entity {
 
 
     void AsignPlayerGun() {
-        Debug.Log("Creando arma player");
         gun = GunContainer.GetGun(_gunsType);
         reloadTimerStart = gun.ReloadTime;
         _gunStats.Init();
@@ -210,4 +241,31 @@ public class PlayerManager : Entity {
         var t = sr.material.GetFloat("_Health");
         return Color.Lerp(damagedColor, fullHealthColor, t);
     }
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, radius);
+    }
+
+    protected virtual void Attack(Vector2 dir) {
+        if (_timer <= 0) {
+            _timer = _startTimeFloat;
+            colldier.isTrigger = false;
+            _rb.velocity = Vector2.zero;
+            _isDashing = false;
+            _startDash = false;
+            StartCoroutine("DashAgain");
+        } else {
+            _timer -= Time.deltaTime;
+            colldier.isTrigger = true;
+            _isDashing = true;
+            _canDash = false;
+            _rb.velocity = dir.normalized * dashSpeed;
+        }
+    }
+    IEnumerator DashAgain() {
+        yield return new WaitForSeconds(dashCooldown);
+        _canDash = true;
+    }
+
 }

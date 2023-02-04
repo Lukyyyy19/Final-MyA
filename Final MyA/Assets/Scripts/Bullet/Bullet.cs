@@ -13,8 +13,8 @@ public class Bullet : MonoBehaviour, IPausable {
     private Vector3 direction;
     Action<string, Bullet> notify;
 
-    protected delegate void TimeToDestory();
-    protected event TimeToDestory OnTime;
+    // protected delegate void TimeToDestory();
+    // protected event TimeToDestory OnTime;
 
     public void Configure(string _key, Action<string, Bullet> notify) {
         key = _key;
@@ -37,12 +37,9 @@ public class Bullet : MonoBehaviour, IPausable {
     protected virtual void Update() {
         if (!move) return;
         transform.position = transform.position + direction * currentSpeed * Time.deltaTime;
-
         timer = timer + 1 * Time.deltaTime;
-        if (timer > destroyTime) {
-            timer = 0;
-            notify.Invoke(key, this);
-            OnTime?.Invoke();
+        if (timer >= destroyTime) {
+            TimeCompleted();
         }
     }
 
@@ -53,6 +50,10 @@ public class Bullet : MonoBehaviour, IPausable {
         notify.Invoke(key, this);
     }
 
+    protected virtual void TimeCompleted() {
+        timer = 0;
+        notify.Invoke(key, this);
+    }
 
     public void Pause() {
         move = false;

@@ -8,7 +8,6 @@ public class EventManager : MonoBehaviour {
     public Dictionary<string, Action> eventDictionary = new Dictionary<string, Action>();
 
     private void Awake() {
-        Debug.Log("instancia event manager creada");
         instance = this;
     }
 
@@ -24,14 +23,22 @@ public class EventManager : MonoBehaviour {
 
 
     public void RemoveAction(string actionName, Action action) {
-        eventDictionary[actionName] -= action;
+        // eventDictionary[actionName] -= action;
+        if (eventDictionary.ContainsKey(actionName)) {
+            eventDictionary[actionName] -= action;
+            Debug.Log($"Removiendo metodo a la key {actionName}");
+        } else {
+            //eventDictionary.Add(actionName, action);
+            print($"No existe la key {actionName} para remover");
+        }
     }
 
 
     public void TriggerEvent(string actionName) {
-        if (eventDictionary.ContainsKey(actionName))
+        if (eventDictionary.ContainsKey(actionName)) {
             eventDictionary[actionName]?.Invoke();
-        else
+            Debug.Log($"LLamando al evento {actionName}");
+        } else
             Debug.Log($"No contiene la key {actionName}");
     }
 

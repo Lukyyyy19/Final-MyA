@@ -32,6 +32,10 @@ public class CursorManager : MonoBehaviour {
         Cursor.visible = false;
 
     }
+    private void Start() {
+        EventManager.instance.AddAction("OnShoot", PlayAnimation);
+        EventManager.instance.AddAction("OnCanShoot", PlayAnimationClose);
+    }
 
     private void Update() {
         _crossHair.position = Vector3.one;
@@ -73,13 +77,10 @@ public class CursorManager : MonoBehaviour {
         _anim.SetTrigger("Close 0");
     }
 
-    private void OnEnable() {
-        _playerManager.OnShoot += PlayAnimation;
-        _playerManager.OnCanShoot += PlayAnimationClose;
-
-    }
     private void OnDisable() {
-        _playerManager.OnShoot -= PlayAnimation;
-        _playerManager.OnCanShoot -= PlayAnimationClose;
+        EventManager.instance.RemoveAction("OnShoot", PlayAnimation);
+        EventManager.instance.RemoveAction("OnCanShoot", PlayAnimationClose);
+        // _playerManager.OnShoot -= PlayAnimation;
+        // _playerManager.OnCanShoot -= PlayAnimationClose;
     }
 }
