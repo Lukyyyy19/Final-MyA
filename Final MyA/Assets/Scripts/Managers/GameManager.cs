@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GunsEnum;
 using System;
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour, IPausable {
     public static GameManager instance;
     public GunsPool _gunPool;
     public EnemyPool _enemyPool;
@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviour {
     [SerializeField, Range(1, 50)]
     private float _height;
 
+    private float _timeelapsed;
+    private TimeSpan _realTime;
+
     private void Awake() {
         instance = this;
         enemies = new HashSet<Enemy>();
@@ -32,9 +35,14 @@ public class GameManager : MonoBehaviour {
     private void Start() {
         _enemyPool.IntantiateEnemys("Shooter", _enemiesTypePrefab[0], 3);
         _enemyPool.IntantiateEnemys("Melee", _enemiesTypePrefab[1], 3);
+        ScreenManager.instance.AddPausable(this);
     }
     private void Update() {
-        isPaused = ScreenManager.instance.isPaused;
+        if (!isPaused)
+            _timeelapsed += Time.deltaTime;
+        _realTime = TimeSpan.FromSeconds(_timeelapsed);
+        _menuManagerUI.TimeText = _realTime.ToString("mm':'ss");
+
         if (Input.GetButtonDown("Pause")) {
 
             switch (isPaused) {
@@ -48,10 +56,9 @@ public class GameManager : MonoBehaviour {
                     break;
             }
         }
-        if (enemies.Count < 3)
-            //StartCoroutine("InstantiateEnemies");
-            InstantiateEnemies();
 
+        if (enemies.Count < GetEnemyAmount())
+            InstantiateEnemies();
 
     }
 
@@ -63,8 +70,6 @@ public class GameManager : MonoBehaviour {
         float y = UnityEngine.Random.Range(-_height, _height);
         randPos = new Vector2(x, y);
         var randEnemy = UnityEngine.Random.Range(1, 3);
-        // var ps = Instantiate(_particleEnemiesAppear, randPos, Quaternion.identity);
-        // yield return null/*new WaitUntil(() => ps.isStopped);*/;
         switch (randEnemy) {
             case 1:
                 enemies.Add(_enemyPool.Get("Shooter", randPos));
@@ -73,6 +78,18 @@ public class GameManager : MonoBehaviour {
                 enemies.Add(_enemyPool.Get("Melee", randPos));
                 break;
         }
+    }
+
+
+    int GetEnemyAmount() {
+        int min = 2 + Mathf.FloorToInt(GetMinutes() / 2);
+        int max = 4 + Mathf.FloorToInt(GetMinutes() / 1.5f);
+        Debug.Log(max);
+        return UnityEngine.Random.Range(min, max + 1);
+    }
+
+    int GetMinutes() {
+        return (int)_timeelapsed / 60;
     }
 
     IEnumerator DieStopTime() {
@@ -102,6 +119,19 @@ public class GameManager : MonoBehaviour {
 #endif
     }
 
+
+    public void GameOver() {
+        ScreenManager.instance.Pause();
+        _menuManagerUI.ShowPauseMenu();
+    }
+
+    public void Pause() {
+        isPaused = true;
+    }
+
+    public void Resume() {
+        isPaused = false;
+    }
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;
 

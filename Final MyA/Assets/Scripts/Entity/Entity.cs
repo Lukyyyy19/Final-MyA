@@ -25,7 +25,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IPausable {
 
     protected SpriteRenderer sr;
     private Color _mainColor;
-
+    [SerializeField]
+    protected Color _damageColor;
     public bool isMoving;
 
     protected virtual void Awake() {
@@ -43,8 +44,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IPausable {
 
     public virtual void TakeDamage(int damage) {
         _health -= damage;
-        sr.color = Color.white;
-        Invoke("ResetColor", 0.05f);
+        sr.color = _damageColor;
+        Invoke("ResetColor", 0.1f);
         if (_health <= 0) {
             Die();
         }

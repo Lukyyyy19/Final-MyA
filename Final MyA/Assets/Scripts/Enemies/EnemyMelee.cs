@@ -12,9 +12,9 @@ public class EnemyMelee : Enemy {
 
     protected override void Update() {
         base.Update();
+        if (_isSpawning) return;
         Move(Arrive(_target.position) + (Vector2)Separation());
     }
-
 
     private void OnCollisionStay2D(Collision2D other) {
         IDamageable damageable;
@@ -30,7 +30,6 @@ public class EnemyMelee : Enemy {
     private void CanAttackAgain() {
         _canAttack = true;
     }
-
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;

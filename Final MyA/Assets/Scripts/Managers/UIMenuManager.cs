@@ -11,6 +11,11 @@ public class UIMenuManager : MonoBehaviour {
     GameObject _treeMenu;
     [SerializeField]
     GameObject panel;
+    [SerializeField]
+    private TextMeshProUGUI _timeText;
+
+    public string TimeText { set => _timeText.text = value; }
+
     public void DeactivatePauseMenu() {
         panel.SetActive(false);
         _pauseMenu.SetActive(false);

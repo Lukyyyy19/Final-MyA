@@ -4,30 +4,23 @@ using UnityEngine;
 using GunsEnum;
 using System;
 
-public class EnemyShooting : Enemy {
+public class EnemyShooting : Enemy, IHaveGun {
     [SerializeField]
     private float shootDist;
     [SerializeField]
     private float stopDist;
     [SerializeField]
     public Gun gun;
-
     [SerializeField]
     protected GunsType _gunsType;
-
     protected bool _canShoot = true;
     [SerializeField]
     protected Transform _firePoint;
 
     protected override void Start() {
         base.Start();
-        //GameManager.instance._eventManager.AddAction("CreateGuns", AsignGun);
         AsignGun();
     }
-    // public override void Configure(string _key, Action<string, Enemy> notify)
-    // {
-    //     base.Configure(_key, notify);
-    // }
 
     protected override void Update() {
         base.Update();
@@ -48,20 +41,36 @@ public class EnemyShooting : Enemy {
         }
     }
 
-
-
     private void AsignGun() {
         Debug.Log("Asignando arma enemigo");
         gun = GameManager.instance._gunPool.Get(_gunsType);
         if (gun != null) Debug.Log("Arma Asignada");
     }
 
-
-
     protected override void OnDisable() {
         base.OnDisable();
         if (gun != null)
             gun.notify.Invoke(gun.Name, gun);
+    }
+
+    public void Shoot() {
+        if (paused) return;
+        if (gun == null) return;
+        if (!_canShoot) return;
+        gun.Fire(_hand, _firePoint);
+        _canShoot = false;
+        Invoke("CanShootAgain", gun.FireRate);
+    }
+
+    public void CanShootAgain() {
+        //EventManager.instance.TriggerEvent("OnCanShoot");
+        _canShoot = true;
+    }
+
+    public void Reload() {
+        if (gun.Ammo == gun.MaxAmmo) return;
+        gun.Ammo = gun.MaxAmmo;
+
     }
 
     private void OnDrawGizmos() {
@@ -71,27 +80,6 @@ public class EnemyShooting : Enemy {
         Gizmos.DrawWireSphere(transform.position, radiusSeparation);
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, shootDist);
-
-    }
-
-
-    protected virtual void Shoot() {
-        if (paused) return;
-        if (gun == null) return;
-        if (!_canShoot) return;
-        gun.Fire(_hand, _firePoint);
-        _canShoot = false;
-        Invoke("CanShootAgain", gun.FireRate);
-    }
-
-    void CanShootAgain() {
-        EventManager.instance.TriggerEvent("OnCanShoot");
-        _canShoot = true;
-    }
-
-    protected virtual void Reload() {
-        if (gun.Ammo == gun.MaxAmmo) return;
-        gun.Ammo = gun.MaxAmmo;
 
     }
 }

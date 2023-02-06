@@ -169,6 +169,7 @@ MonoBehaviour:
   _maxHealth: 3
   _hand: {fileID: 6307414574935943915}
   paused: 0
+  _damageColor: {r: 1, g: 1, b: 1, a: 1}
   isMoving: 0
   _target: {fileID: 0}
   viewRange: 13.52

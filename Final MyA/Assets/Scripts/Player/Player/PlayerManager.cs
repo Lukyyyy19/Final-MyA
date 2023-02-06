@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using GunsEnum;
 using UpgradesEnum;
-public class PlayerManager : EntityShoot {
+public class PlayerManager : Entity, IHaveGun {
 
     public delegate void UpdateAmmoDelegate(int bullet);
     public event UpdateAmmoDelegate OnUpdateAmmo;
 
     protected bool isPaused;
     private Vector2 _keyDirection;
+
+    [SerializeField]
+    UiTreeSkill _uiTreeSkill;
+
 
     [Header("Components")]
     [SerializeField]
@@ -60,7 +64,17 @@ public class PlayerManager : EntityShoot {
     private float _timer;
     private bool _startTime;
 
+    [Header("Gun")]
+    [SerializeField]
+    public Gun gun;
 
+    [SerializeField]
+    private GunsType _gunsType;
+
+    [SerializeField]
+    private bool _canShoot;
+    [SerializeField]
+    private Transform _firePoint;
 
 
     public TreeSkills TreeSkills { get => _treeSkills; }
@@ -75,19 +89,16 @@ public class PlayerManager : EntityShoot {
         _treeSkills = new TreeSkills();
         _treeSkills.Init();
         _treeSkills.OnSkillUnlocked += OnSkillUnlocked;
-        // gun = _gunStats.gun;
-
     }
 
     protected override void Start() {
         AsignPlayerGun();
         base.Start();
-        // GunContainer.instance.Init();
     }
 
     void Update() {
-        if (isPaused) return;
         playerInputs.ArtificialUpdate();
+        if (isPaused) return;
         _keyDirection.x = playerInputs.MovHor;
         _keyDirection.y = playerInputs.MovVer;
 
@@ -133,26 +144,32 @@ public class PlayerManager : EntityShoot {
 
     }
 
-    protected override void Shoot() {
-        base.Shoot();
+    public void Shoot() {
+        if (paused) return;
+        if (gun == null) return;
+        if (!_canShoot) return;
+        gun.Fire(_hand, _firePoint);
+        EventManager.instance.TriggerEvent("OnShoot");
         OnUpdateAmmo?.Invoke(gun.Ammo);
+        _canShoot = false;
+        Invoke("CanShootAgain", gun.FireRate);
     }
 
-    protected override void Reload() {
-        base.Reload();
+    public void CanShootAgain() {
+        EventManager.instance.TriggerEvent("OnCanShoot");
+        _canShoot = true;
+    }
+
+    public void Reload() {
+        if (gun.Ammo == gun.MaxAmmo) return;
+        gun.Ammo = gun.MaxAmmo;
         OnUpdateAmmo?.Invoke(gun.Ammo);
         reloadTimer = 0;
+
     }
 
     public void UpdateReloadTimer(float time) {
         reloadTimerStart = time;
-    }
-
-
-    private void VariableChangeHandler(GunsType newGun) {
-        gun = GunContainer.GetGun(newGun);
-        OnUpdateAmmo?.Invoke(gun.Ammo);
-
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
@@ -163,7 +180,6 @@ public class PlayerManager : EntityShoot {
     }
 
     public void EnemyKill() {
-        // StartCoroutine("DieStopTime");
         enemyDeadCounter++;
         if (enemyDeadCounter >= nextLevel) {
             LevelUp();
@@ -172,17 +188,16 @@ public class PlayerManager : EntityShoot {
 
     private void LevelUp() {
         _treeSkills.abilityPoints++;
-        GameManager.instance._menuManagerUI.ShowPauseMenu();
+        GameManager.instance._menuManagerUI.ShowTreeMenu();
+        _uiTreeSkill.UpdateAbilitiesText();
         nextLevel = Mathf.CeilToInt(nextLevel * 2.5f);
         ScreenManager.instance.Pause();
     }
 
-    protected IEnumerator DieStopTime() {
-        ScreenManager.instance.Pause();
-        yield return new WaitForSeconds(.07f);
-        ScreenManager.instance.Resume();
+    protected override void Die() {
+        base.Die();
+        GameManager.instance.GameOver();
     }
-
 
     void AsignPlayerGun() {
         gun = GunContainer.GetGun(_gunsType);

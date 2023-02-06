@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CursorManager : MonoBehaviour {
+public class CursorManager : MonoBehaviour, IPausable {
 
     [SerializeField]
     private PlayerManager _playerManager;
@@ -14,6 +14,8 @@ public class CursorManager : MonoBehaviour {
     private Animator _anim;
 
 
+    [SerializeField]
+    private GameObject _crossHairGo;
     [SerializeField]
     private Transform _tipUp, _tipDown, _tipLeft, _tipRight, _lines;
     [SerializeField]
@@ -33,6 +35,7 @@ public class CursorManager : MonoBehaviour {
 
     }
     private void Start() {
+        ScreenManager.instance.AddPausable(this);
         EventManager.instance.AddAction("OnShoot", PlayAnimation);
         EventManager.instance.AddAction("OnCanShoot", PlayAnimationClose);
     }
@@ -41,7 +44,6 @@ public class CursorManager : MonoBehaviour {
         _crossHair.position = Vector3.one;
         _crossHair.position = (Vector2)_cam.ScreenToWorldPoint(_playerManager.playerInputs.MousePos);
 
-        // var targetDistance = _maxDistance;
         if (_playAnimation) {
             _timer += Time.deltaTime * _playerManager.gun.FireRate;
             if (_timer >= 1) {
@@ -72,15 +74,25 @@ public class CursorManager : MonoBehaviour {
         _anim.SetTrigger("Shoot");
     }
     public void PlayAnimationClose() {
-        // _timer = 0;
-        // _playAnimation = true;
         _anim.SetTrigger("Close 0");
     }
 
     private void OnDisable() {
         EventManager.instance.RemoveAction("OnShoot", PlayAnimation);
         EventManager.instance.RemoveAction("OnCanShoot", PlayAnimationClose);
-        // _playerManager.OnShoot -= PlayAnimation;
-        // _playerManager.OnCanShoot -= PlayAnimationClose;
+        ScreenManager.instance.RemovePausable(this);
+
+    }
+
+    public void Pause() {
+        _anim.speed = 0;
+        Cursor.visible = true;
+        _crossHairGo.SetActive(false);
+    }
+
+    public void Resume() {
+        _anim.speed = 1;
+        Cursor.visible = false;
+        _crossHairGo.SetActive(true);
     }
 }

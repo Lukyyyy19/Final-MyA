@@ -51,6 +51,8 @@ public class Enemy : Entity {
         _rb.isKinematic = true;
         // gameObject.SetActive(false);
         var ps = Instantiate(particleAppear, transform.position, Quaternion.identity);
+        var pm = ps.main;
+        pm.startColor = sr.color;
         yield return new WaitUntil(() => ps.isStopped);
         Destroy(ps.gameObject);
         sr.enabled = true;

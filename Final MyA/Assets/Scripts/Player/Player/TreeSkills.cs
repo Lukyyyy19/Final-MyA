@@ -9,13 +9,40 @@ public class TreeSkills {
 
     Dictionary<PlayerSkills, int> abilityPointsDic = new Dictionary<PlayerSkills, int>();
     List<PlayerSkills> unlockedSkills = new List<PlayerSkills>();
-    List<GunUpgrades> unlockedGunUpgrades = new List<GunUpgrades>();
     public int abilityPoints;
     public Action<PlayerSkills> OnSkillUnlocked;
     public void Init() {
         abilityPointsDic.Add(PlayerSkills.Dash, 1);
+        abilityPointsDic.Add(PlayerSkills.Dash1, 3);
         abilityPointsDic.Add(PlayerSkills.MaxHealth1, 1);
-        abilityPointsDic.Add(PlayerSkills.MaxHealth2, 1);
+        abilityPointsDic.Add(PlayerSkills.MaxHealth2, 2);
+        abilityPointsDic.Add(PlayerSkills.Damage, 1);
+        abilityPointsDic.Add(PlayerSkills.Spread, 2);
+        abilityPointsDic.Add(PlayerSkills.BulletQty, 3);
+        abilityPointsDic.Add(PlayerSkills.FireRate, 1);
+    }
+
+    public PlayerSkills GetRandomAbility() {
+        var ab = UnityEngine.Random.Range(0, 9);
+        var ps = (PlayerSkills)ab;
+        var canReturn = false;
+        HashSet<PlayerSkills> randomSkills = new HashSet<PlayerSkills>();
+        while (!canReturn) {
+            var skillType = UnlockRequirement(ps);
+            if (skillType != PlayerSkills.None) {
+                if (IsUpgradeUnlocked(skillType) && randomSkills.Contains(ps)) {
+                    randomSkills.Add(ps);
+                    return ps;
+                } else {
+                    ab = UnityEngine.Random.Range(0, 9);
+                    ps = (PlayerSkills)ab;
+                }
+            } else {
+                randomSkills.Add(ps);
+                return ps;
+            }
+        }
+        return PlayerSkills.None;
     }
 
 
@@ -47,6 +74,7 @@ public class TreeSkills {
     PlayerSkills UnlockRequirement(PlayerSkills skill) {
         switch (skill) {
             case PlayerSkills.MaxHealth2: return PlayerSkills.MaxHealth1;
+            case PlayerSkills.Dash1: return PlayerSkills.Dash;
         }
         return PlayerSkills.None;
     }
@@ -54,8 +82,5 @@ public class TreeSkills {
 
     public bool IsUpgradeUnlocked(PlayerSkills skill) {
         return unlockedSkills.Contains(skill);
-    }
-    public bool IsUpgradeUnlocked(GunUpgrades upgrade) {
-        return unlockedGunUpgrades.Contains(upgrade);
     }
 }
