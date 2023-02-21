@@ -6,4 +6,5 @@ public interface IHaveGun {
     void Shoot();
     void CanShootAgain();
     void Reload();
+    void AsignGun();
 }

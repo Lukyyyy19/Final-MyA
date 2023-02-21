@@ -52,88 +52,88 @@ public class GunStats : MonoBehaviour {
 
 
 
-    // public void UpgradeGun(StockSO gunPart) {
-    //     if (upgrades.Add(gunPart.gunpart)) {
-    //         _currentStock = gunPart;
-    //         gun.FireRate += gunPart.fireRate;
-    //         gun.Spread += gunPart.spread;
-    //         gun.ClampValues();
-    //     } else {
-    //         DowngradeGun(_currentStock);
-    //         UpgradeGun(gunPart);
-    //     }
-    //     // OnUpdateAmmo?.Invoke(gun.Ammo);
-    // }
-    // public void UpgradeGun(CannonSO gunPart) {
-    //     if (upgrades.Add(gunPart.gunpart)) {
-    //         _currentCannon = gunPart;
-    //         gun.Spread += gunPart.spread;
-    //         gun.BulletsQty = gunPart.bulletsPerShot;
-    //         gun.FireRate += gunPart.fireRate;
-    //         gun.ClampValues();
-    //     } else {
-    //         DowngradeGun(_currentCannon);
-    //         UpgradeGun(gunPart);
-    //     }
-    //     // OnUpdateAmmo?.Invoke(gun.Ammo);
-    // }
-    // public void UpgradeGun(MiddlePartSO gunPart) {
-    //     if (upgrades.Add(gunPart.gunpart)) {
-    //         _currentMiddlePart = gunPart;
-    //         gun.MaxAmmo = gunPart.maxAmmo;
-    //         gun.Damage += gunPart.damage;
-    //         gun.BulletType = gunPart.bulletType;
-    //         gun.ReloadTime += gunPart.reloadTime;
-    //         gun.Ammo = gun.MaxAmmo;
-    //         gun.ClampValues();
-    //     } else {
-    //         DowngradeGun(_currentMiddlePart);
-    //         UpgradeGun(gunPart);
-    //     }
-    //     // OnUpdateAmmo?.Invoke(gun.Ammo);
-    // }
-    // // public void DowngradeGun(GunParts gunPart) {
-    // //     if (upgrades.Remove(gunPart.gunPart)) {
-    // //         Debug.Log("Removiendo");
-    // //         gunPart.Deattach(gun);
-    // //     }
-    // //     gun.ClampValues();
-    // //     //OnUpdateAmmo?.Invoke(gun.Ammo);
-
-    // // }
-
-    // public void DowngradeGun(StockSO gunPart) {
-    //     if (upgrades.Remove(gunPart.gunpart)) {
-
-    //         gun.FireRate -= gunPart.fireRate;
-    //         gun.Spread -= gunPart.spread;
-    //         gun.ClampValues();
-    //     }
-    //     // _currentStock = gunPart;
-    //     // OnUpdateAmmo?.Invoke(gun.Ammo);
-    // }
-    // public void DowngradeGun(CannonSO gunPart) {
-    //     if (upgrades.Remove(gunPart.gunpart)) {
-
-    //         gun.Spread -= gunPart.spread;
-    //         gun.BulletsQty = _initialbulletsPerShot;
-    //         gun.FireRate -= gunPart.fireRate;
-    //         gun.ClampValues();
-    //     }
-    //     // OnUpdateAmmo?.Invoke(gun.Ammo);
-    // }
-    // public void DowngradeGun(MiddlePartSO gunPart) {
-    //     if (upgrades.Remove(gunPart.gunpart)) {
+    public void UpgradeGun(StockSO gunPart) {
+        if (upgrades.Add(gunPart.gunpart)) {
+            _currentStock = gunPart;
+            gun.FireRate += gunPart.fireRate;
+            gun.Spread += gunPart.spread;
+            gun.ClampValues();
+        } else {
+            DowngradeGun(_currentStock);
+            UpgradeGun(gunPart);
+        }
+        // OnUpdateAmmo?.Invoke(gun.Ammo);
+    }
+    public void UpgradeGun(CannonSO gunPart) {
+        if (upgrades.Add(gunPart.gunpart)) {
+            _currentCannon = gunPart;
+            gun.Spread += gunPart.spread;
+            gun.BulletsQty = gunPart.bulletsPerShot;
+            gun.FireRate += gunPart.fireRate;
+            gun.ClampValues();
+        } else {
+            DowngradeGun(_currentCannon);
+            UpgradeGun(gunPart);
+        }
+        // OnUpdateAmmo?.Invoke(gun.Ammo);
+    }
+    public void UpgradeGun(MiddlePartSO gunPart) {
+        if (upgrades.Add(gunPart.gunpart)) {
+            _currentMiddlePart = gunPart;
+            gun.MaxAmmo = gunPart.maxAmmo;
+            gun.Damage += gunPart.damage;
+            gun.BulletType = gunPart.bulletType;
+            gun.ReloadTime += gunPart.reloadTime;
+            gun.Ammo = gun.MaxAmmo;
+            gun.ClampValues();
+        } else {
+            DowngradeGun(_currentMiddlePart);
+            UpgradeGun(gunPart);
+        }
+        // OnUpdateAmmo?.Invoke(gun.Ammo);
+    }
+    // public void DowngradeGun(GunParts gunPart) {
+    //     if (upgrades.Remove(gunPart.gunPart)) {
     //         Debug.Log("Removiendo");
-
-    //         gun.MaxAmmo = _initialBullets;
-    //         gun.Damage -= gunPart.damage;
-    //         gun.BulletType = _initialbulletType;
-    //         gun.ReloadTime -= gunPart.reloadTime;
-    //         gun.Ammo = gun.MaxAmmo;
-    //         gun.ClampValues();
+    //         gunPart.Deattach(gun);
     //     }
-    //     // _currentMiddlePart = gunPart;
-    //     // OnUpdateAmmo?.Invoke(gun.Ammo);
+    //     gun.ClampValues();
+    //     //OnUpdateAmmo?.Invoke(gun.Ammo);
+
     // }
+
+    public void DowngradeGun(StockSO gunPart) {
+        if (upgrades.Remove(gunPart.gunpart)) {
+
+            gun.FireRate -= gunPart.fireRate;
+            gun.Spread -= gunPart.spread;
+            gun.ClampValues();
+        }
+        // _currentStock = gunPart;
+        // OnUpdateAmmo?.Invoke(gun.Ammo);
+    }
+    public void DowngradeGun(CannonSO gunPart) {
+        if (upgrades.Remove(gunPart.gunpart)) {
+
+            gun.Spread -= gunPart.spread;
+            gun.BulletsQty = _initialbulletsPerShot;
+            gun.FireRate -= gunPart.fireRate;
+            gun.ClampValues();
+        }
+        // OnUpdateAmmo?.Invoke(gun.Ammo);
+    }
+    public void DowngradeGun(MiddlePartSO gunPart) {
+        if (upgrades.Remove(gunPart.gunpart)) {
+            Debug.Log("Removiendo");
+
+            gun.MaxAmmo = _initialBullets;
+            gun.Damage -= gunPart.damage;
+            gun.BulletType = _initialbulletType;
+            gun.ReloadTime -= gunPart.reloadTime;
+            gun.Ammo = gun.MaxAmmo;
+            gun.ClampValues();
+        }
+        // _currentMiddlePart = gunPart;
+        // OnUpdateAmmo?.Invoke(gun.Ammo);
+    }
 }

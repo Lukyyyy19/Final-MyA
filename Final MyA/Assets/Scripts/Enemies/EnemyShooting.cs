@@ -41,10 +41,8 @@ public class EnemyShooting : Enemy, IHaveGun {
         }
     }
 
-    private void AsignGun() {
-        Debug.Log("Asignando arma enemigo");
+    public void AsignGun() {
         gun = GameManager.instance._gunPool.Get(_gunsType);
-        if (gun != null) Debug.Log("Arma Asignada");
     }
 
     protected override void OnDisable() {

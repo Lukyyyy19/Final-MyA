@@ -49,9 +49,9 @@ public class ArmMovement : MonoBehaviour, IPausable {
     private void FlipGun(float angle) {
         Vector3 localScale = Vector3.one;
         if (angle > 90 || angle < -90) {
-            _playerManager.FlipPlayer(1);
+            _playerManager.playerVisuals.FlipPlayer(1);
         } else {
-            _playerManager.FlipPlayer(-1);
+            _playerManager.playerVisuals.FlipPlayer(-1);
         }
         transform.localScale = localScale;
     }

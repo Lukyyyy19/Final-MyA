@@ -4,11 +4,9 @@ namespace UpgradesEnum {
         Dash1 = 1,
         MaxHealth1 = 2,
         MaxHealth2 = 3,
-        BulletType = 4,
-        BulletQty = 5,
-        FireRate = 6,
-        Spread = 7,
-        Damage = 8,
+        BulletQty = 4,
+        FireRate = 5,
+        Damage = 6,
         None
     }
 }

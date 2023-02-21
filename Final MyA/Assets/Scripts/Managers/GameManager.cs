@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour, IPausable {
     }
     private void Start() {
         _enemyPool.IntantiateEnemys("Shooter", _enemiesTypePrefab[0], 3);
-        _enemyPool.IntantiateEnemys("Melee", _enemiesTypePrefab[1], 3);
+        //  _enemyPool.IntantiateEnemys("Melee", _enemiesTypePrefab[1], 3);
         ScreenManager.instance.AddPausable(this);
     }
     private void Update() {
@@ -74,9 +74,9 @@ public class GameManager : MonoBehaviour, IPausable {
             case 1:
                 enemies.Add(_enemyPool.Get("Shooter", randPos));
                 break;
-            default:
-                enemies.Add(_enemyPool.Get("Melee", randPos));
-                break;
+                // default:
+                //     enemies.Add(_enemyPool.Get("Melee", randPos));
+                //     break;
         }
     }
 
@@ -84,7 +84,6 @@ public class GameManager : MonoBehaviour, IPausable {
     int GetEnemyAmount() {
         int min = 2 + Mathf.FloorToInt(GetMinutes() / 2);
         int max = 4 + Mathf.FloorToInt(GetMinutes() / 1.5f);
-        Debug.Log(max);
         return UnityEngine.Random.Range(min, max + 1);
     }
 

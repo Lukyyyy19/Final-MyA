@@ -5725,7 +5725,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &225023366
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5790,7 +5790,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 688920853}
+      - m_Target: {fileID: 1028016834}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -5818,6 +5818,42 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ScreenManager, Assembly-CSharp
         m_MethodName: Resume
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1005756435}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 988123946}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 225023365}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -7529,10 +7565,14 @@ MonoBehaviour:
   _wallCollider: {fileID: 866112219}
   _gunStats: {fileID: 0}
   playerAnimation: {fileID: 0}
+  _treeSkills:
+    allSkills: 
+    unlockedSkills: 
   reloadTimer: 0
   reloadTimerStart: 0
   enemyDeadCounter: 0
-  nextLevel: 5
+  nextLevel: 1
+  _currentLevel: 0
   _layerWall:
     serializedVersion: 2
     m_Bits: 64
@@ -8537,7 +8577,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &988123947
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8602,7 +8642,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 688920853}
+      - m_Target: {fileID: 1028016834}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -8638,14 +8678,38 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1727690231}
-        m_TargetAssemblyTypeName: UiTreeSkill, Assembly-CSharp
-        m_MethodName: UnlockSkill
-        m_Mode: 3
+      - m_Target: {fileID: 1005756435}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 225023365}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 988123946}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -8760,7 +8824,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1005756436
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8825,7 +8889,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 688920853}
+      - m_Target: {fileID: 1028016834}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -8861,10 +8925,34 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1727690231}
-        m_TargetAssemblyTypeName: UiTreeSkill, Assembly-CSharp
-        m_MethodName: UnlockSkill
-        m_Mode: 3
+      - m_Target: {fileID: 225023365}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 988123946}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1005756435}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -11503,9 +11591,9 @@ GameObject:
   - component: {fileID: 1727690228}
   - component: {fileID: 1727690225}
   - component: {fileID: 1727690227}
+  - component: {fileID: 1727690231}
   - component: {fileID: 1727690229}
   - component: {fileID: 1727690230}
-  - component: {fileID: 1727690231}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -11566,8 +11654,7 @@ MonoBehaviour:
   _gunPool: {fileID: 2099838257}
   _enemyPool: {fileID: 335270503}
   _enemiesTypePrefab:
-  - {fileID: 1350369739991881496, guid: bfbfaea1638c7ac49a6991625d88bb3a, type: 3}
-  - {fileID: 6307414575759257060, guid: c839300022f64664fa768156ba313381, type: 3}
+  - {fileID: 3907663774256574768, guid: 26b33f778a6aefe46bdbd81ee12da460, type: 3}
   _particleEnemiesAppear: {fileID: 6643764040035315855, guid: 84e5d34291f399d40a5807084d0a3700, type: 3}
   _eventManager: {fileID: 1727690228}
   _menuManagerUI: {fileID: 0}
@@ -11624,16 +11711,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1727690224}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1401515088f06fc44b64edb92bd14a68, type: 3}
+  m_Script: {fileID: 11500000, guid: d1992fd906e7545419777b070bd30017, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _abilityPointsTxt: {fileID: 503055557}
+  _treeSkills:
+    allSkills: 
+    unlockedSkills: 
   _btnAbility1: {fileID: 1005756437}
   _btnAbility2: {fileID: 225023367}
   _btnAbility3: {fileID: 988123948}
-  _textAbility1: {fileID: 1268168288}
-  _textAbility2: {fileID: 612459784}
-  _textAbility3: {fileID: 105597817}
+  _txtAbility1: {fileID: 1268168288}
+  _txtAbility2: {fileID: 612459784}
+  _txtAbility3: {fileID: 105597817}
 --- !u!1 &1743050538
 GameObject:
   m_ObjectHideFlags: 0

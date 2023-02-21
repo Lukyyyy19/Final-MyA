@@ -3,46 +3,65 @@ using System.Collections.Generic;
 using UnityEngine;
 using UpgradesEnum;
 using System;
+[Serializable]
 public class TreeSkills {
-
-
-
-    Dictionary<PlayerSkills, int> abilityPointsDic = new Dictionary<PlayerSkills, int>();
+    [SerializeField]
+    List<PlayerSkills> allSkills = new List<PlayerSkills>();
+    [SerializeField]
     List<PlayerSkills> unlockedSkills = new List<PlayerSkills>();
-    public int abilityPoints;
+    // [SerializeField]
+    // List<PlayerSkills> tempAllSkills = new List<PlayerSkills>();
     public Action<PlayerSkills> OnSkillUnlocked;
     public void Init() {
-        abilityPointsDic.Add(PlayerSkills.Dash, 1);
-        abilityPointsDic.Add(PlayerSkills.Dash1, 3);
-        abilityPointsDic.Add(PlayerSkills.MaxHealth1, 1);
-        abilityPointsDic.Add(PlayerSkills.MaxHealth2, 2);
-        abilityPointsDic.Add(PlayerSkills.Damage, 1);
-        abilityPointsDic.Add(PlayerSkills.Spread, 2);
-        abilityPointsDic.Add(PlayerSkills.BulletQty, 3);
-        abilityPointsDic.Add(PlayerSkills.FireRate, 1);
+        allSkills.Add(PlayerSkills.Dash);
+        allSkills.Add(PlayerSkills.Dash1);
+        allSkills.Add(PlayerSkills.MaxHealth1);
+        allSkills.Add(PlayerSkills.MaxHealth2);
+        allSkills.Add(PlayerSkills.BulletQty);
+        allSkills.Add(PlayerSkills.FireRate);
+        allSkills.Add(PlayerSkills.Damage);
     }
 
-    public PlayerSkills GetRandomAbility() {
-        var ab = UnityEngine.Random.Range(0, 9);
-        var ps = (PlayerSkills)ab;
-        var canReturn = false;
-        HashSet<PlayerSkills> randomSkills = new HashSet<PlayerSkills>();
-        while (!canReturn) {
-            var skillType = UnlockRequirement(ps);
-            if (skillType != PlayerSkills.None) {
-                if (IsUpgradeUnlocked(skillType) && randomSkills.Contains(ps)) {
-                    randomSkills.Add(ps);
-                    return ps;
+    public List<PlayerSkills> GetRandomAbility() {
+        int numberOfRepetitions = 3;
+        List<PlayerSkills> randomSkills = new List<PlayerSkills>();
+        List<PlayerSkills> tempAllSkills = new List<PlayerSkills>(allSkills);
+        if (unlockedSkills.Count > allSkills.Count - 4) {
+            numberOfRepetitions = allSkills.Count - unlockedSkills.Count;
+            Debug.Log("Reduciendo el numero de repeticiones en: " + numberOfRepetitions);
+        }
+        for (int i = 0; i < numberOfRepetitions; i++) {
+            Debug.Log("La cantidad de items en la lista temp es " + tempAllSkills.Count);
+            int ab = UnityEngine.Random.Range(0, tempAllSkills.Count);
+            var ps = tempAllSkills[ab];
+
+            var skillTypeRequirerment = UnlockRequirement(ps);
+            if (!IsUpgradeUnlocked(ps)) {
+                if (skillTypeRequirerment != PlayerSkills.None) {
+                    if (IsUpgradeUnlocked(skillTypeRequirerment)) {
+                        tempAllSkills.Remove(ps);
+                        Debug.Log($"Aniadiendo la skill que requiere {skillTypeRequirerment} y es {ps}");
+                        randomSkills.Add(ps);
+                    } else {
+                        Debug.Log("Eligiendo otra habilidad debido a que ya fue elegida");
+                        ab = UnityEngine.Random.Range(0, tempAllSkills.Count);
+                        ps = tempAllSkills[ab];
+                        numberOfRepetitions++;
+                        Debug.Log("La nueva habilidad es " + ps);
+                    }
                 } else {
-                    ab = UnityEngine.Random.Range(0, 9);
-                    ps = (PlayerSkills)ab;
+                    tempAllSkills.Remove(ps);
+                    Debug.Log("Aniadiendo nueva skill que es " + ps);
+                    randomSkills.Add(ps);
                 }
             } else {
-                randomSkills.Add(ps);
-                return ps;
+                // ab = UnityEngine.Random.Range(0, tempAllSkills.Count);
+                // ps = tempAllSkills[ab];
+                numberOfRepetitions++;
             }
         }
-        return PlayerSkills.None;
+        Debug.Log("La lista contiene " + randomSkills.Count);
+        return randomSkills;
     }
 
 
@@ -61,8 +80,7 @@ public class TreeSkills {
         }
     }
     private void UnlockSkill(PlayerSkills skill) {
-        if (abilityPoints >= abilityPointsDic[skill] && !IsUpgradeUnlocked(skill)) {
-            abilityPoints -= abilityPointsDic[skill];
+        if (!IsUpgradeUnlocked(skill)) {
             unlockedSkills.Add(skill);
             OnSkillUnlocked?.Invoke(skill);
             Debug.Log($"Hablilidad desbloqueda: {skill}");
@@ -82,5 +100,8 @@ public class TreeSkills {
 
     public bool IsUpgradeUnlocked(PlayerSkills skill) {
         return unlockedSkills.Contains(skill);
+    }
+    public int SkillsUnlockedCount() {
+        return unlockedSkills.Count;
     }
 }

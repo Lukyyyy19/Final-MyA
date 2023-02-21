@@ -12,7 +12,7 @@ public class PlayerManager : Entity, IHaveGun {
     private Vector2 _keyDirection;
 
     [SerializeField]
-    UiTreeSkill _uiTreeSkill;
+    newUITreeSkill _uiTreeSkill;
 
 
     [Header("Components")]
@@ -26,7 +26,9 @@ public class PlayerManager : Entity, IHaveGun {
     public static PlayerManager instance;
     public PlayerInputs playerInputs;
     public PlayerAnimation playerAnimation;
+    [SerializeField]
     private TreeSkills _treeSkills;
+    public UpdatePlayerVisuals playerVisuals;
 
 
     [HideInInspector]
@@ -39,6 +41,10 @@ public class PlayerManager : Entity, IHaveGun {
     private int enemyDeadCounter;
     [SerializeField]
     private int nextLevel = 3;
+    [SerializeField]
+    private int _currentLevel;
+    private int _maxLevel = 7;
+
 
     [Header("Raycasting")]
     [SerializeField]
@@ -83,6 +89,7 @@ public class PlayerManager : Entity, IHaveGun {
         base.Awake();
         instance = this;
         playerInputs = new PlayerInputs();
+        playerVisuals = new UpdatePlayerVisuals(sr, transform);
         _gunStats = GetComponentInChildren<GunStats>();
         _timer = _startTimeFloat;
         playerAnimation = GetComponent<PlayerAnimation>();
@@ -92,7 +99,7 @@ public class PlayerManager : Entity, IHaveGun {
     }
 
     protected override void Start() {
-        AsignPlayerGun();
+        AsignGun();
         base.Start();
     }
 
@@ -109,7 +116,6 @@ public class PlayerManager : Entity, IHaveGun {
         }
         if (reloadTimer >= reloadTimerStart) {
             reloadTimer = reloadTimerStart;
-            Debug.Log("Arma Cargada tiempo");
         }
         if (playerInputs.Fire) {
             Shoot();
@@ -117,14 +123,15 @@ public class PlayerManager : Entity, IHaveGun {
         if (playerInputs.Reload) {
             Invoke("Reload", gun.ReloadTime);
         }
-        if (playerInputs.Dash && _canDash && TreeSkills.IsUpgradeUnlocked(PlayerSkills.Dash)) {
+        if (playerInputs.Dash && _canDash) {
+            if (!TreeSkills.IsUpgradeUnlocked(PlayerSkills.Dash)) return;
             _startDash = true;
         }
         if (_startDash) {
             _wallCollider.enabled = true;
             _trail.enabled = true;
-            _trail.startColor = GetHealthColor();
-            _trail.endColor = GetHealthColor();
+            _trail.startColor = playerVisuals.GetHealthColor();
+            _trail.endColor = playerVisuals.GetHealthColor();
             _invencible = true;
             Attack(_keyDirection);
         }
@@ -135,13 +142,11 @@ public class PlayerManager : Entity, IHaveGun {
         }
 
         playerAnimation.SetBoolParam("IsMoving", isMoving);
-        if (Input.GetKeyDown(KeyCode.F1)) _treeSkills.abilityPoints++;
     }
 
     private void FixedUpdate() {
         if (!_isDashing)
             Move(_keyDirection);
-
     }
 
     public void Shoot() {
@@ -187,7 +192,8 @@ public class PlayerManager : Entity, IHaveGun {
     }
 
     private void LevelUp() {
-        _treeSkills.abilityPoints++;
+        if (_currentLevel > _maxHealth) return;
+        _currentLevel++;
         GameManager.instance._menuManagerUI.ShowTreeMenu();
         _uiTreeSkill.UpdateAbilitiesText();
         nextLevel = Mathf.CeilToInt(nextLevel * 2.5f);
@@ -199,26 +205,17 @@ public class PlayerManager : Entity, IHaveGun {
         GameManager.instance.GameOver();
     }
 
-    void AsignPlayerGun() {
+    public void AsignGun() {
         gun = GunContainer.GetGun(_gunsType);
         reloadTimerStart = gun.ReloadTime;
         _gunStats.Init();
     }
-    protected override void OnDisable() {
-        base.OnDisable();
-        EventManager.instance.RemoveAction("CreateGuns", AsignPlayerGun);
-    }
+
     public override void TakeDamage(int damage) {
         if (!_invencible) {
             base.TakeDamage(damage);
-            UpdateVisualHealth();
-
+            playerVisuals.UpdateVisualHealth(_health, _maxHealth);
         }
-    }
-
-    private void UpdateVisualHealth() {
-        float healthVisual = (float)_health / (float)_maxHealth;
-        sr.material.SetFloat("_Health", healthVisual);
     }
 
     public override void Pause() {
@@ -226,6 +223,7 @@ public class PlayerManager : Entity, IHaveGun {
         isPaused = true;
         playerAnimation.StopAnimation();
     }
+
     public override void Resume() {
         base.Resume();
         playerAnimation.ResumeAnimation();
@@ -241,25 +239,6 @@ public class PlayerManager : Entity, IHaveGun {
                 _maxHealth = 200;
                 break;
         }
-    }
-
-    public void FlipPlayer(float xValue) {
-        Vector3 localScale = transform.localScale;
-        if (xValue < 0) localScale.x = Mathf.Abs(localScale.x) * -1;
-        else if (xValue > 0) localScale.x = Mathf.Abs(localScale.x);
-        transform.localScale = localScale;
-    }
-
-    Color GetHealthColor() {
-        var damagedColor = sr.material.GetColor("_damaged");
-        var fullHealthColor = sr.material.GetColor("_fullHealth");
-        var t = sr.material.GetFloat("_Health");
-        return Color.Lerp(damagedColor, fullHealthColor, t);
-    }
-
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, radius);
     }
 
     protected virtual void Attack(Vector2 dir) {
