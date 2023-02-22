@@ -114,7 +114,7 @@ public class Enemy : Entity {
         var currParticle = Instantiate(particleDead, transform.position, Quaternion.identity);
         var pm = currParticle.main;
         pm.startColor = sr.color;
-        //PlayerManager.instance.EnemyKill();
+        PlayerManager.instance.EnemyKill();
         GameManager.instance.RemoveEnemyFormHash(this);
         notify.Invoke(key, this);
     }

@@ -20,7 +20,7 @@ public class EntityShoot : Entity {
         if (paused) return;
         if (gun == null) return;
         if (!_canShoot) return;
-        gun.Fire(_hand, _firePoint);
+        gun.Fire(_hand, _firePoint, gameObject.layer);
         _canShoot = false;
         Invoke("CanShootAgain", gun.FireRate);
     }

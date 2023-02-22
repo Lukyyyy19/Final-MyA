@@ -4,7 +4,6 @@ using UnityEngine;
 using System;
 
 public class Bullet : MonoBehaviour, IPausable {
-    public float speed = 10;
     public float currentSpeed;
     public float damage = 3;
     string key;
@@ -13,13 +12,9 @@ public class Bullet : MonoBehaviour, IPausable {
     private Vector3 direction;
     Action<string, Bullet> notify;
 
-    // protected delegate void TimeToDestory();
-    // protected event TimeToDestory OnTime;
-
     public void Configure(string _key, Action<string, Bullet> notify) {
         key = _key;
         ScreenManager.instance.AddPausable(this);
-        currentSpeed = speed;
         this.notify = notify;
     }
     public void Move(Vector3 pos, Vector3 dir) {

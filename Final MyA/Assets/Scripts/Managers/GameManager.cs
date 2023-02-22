@@ -33,8 +33,9 @@ public class GameManager : MonoBehaviour, IPausable {
         isPaused = false;
     }
     private void Start() {
-        _enemyPool.IntantiateEnemys("Shooter", _enemiesTypePrefab[0], 3);
-        //  _enemyPool.IntantiateEnemys("Melee", _enemiesTypePrefab[1], 3);
+        foreach (var enemy in _enemiesTypePrefab) {
+            _enemyPool.IntantiateEnemys(enemy.name, enemy, 3);
+        }
         ScreenManager.instance.AddPausable(this);
     }
     private void Update() {
@@ -69,15 +70,9 @@ public class GameManager : MonoBehaviour, IPausable {
         float x = UnityEngine.Random.Range(-_width, _width);
         float y = UnityEngine.Random.Range(-_height, _height);
         randPos = new Vector2(x, y);
-        var randEnemy = UnityEngine.Random.Range(1, 3);
-        switch (randEnemy) {
-            case 1:
-                enemies.Add(_enemyPool.Get("Shooter", randPos));
-                break;
-                // default:
-                //     enemies.Add(_enemyPool.Get("Melee", randPos));
-                //     break;
-        }
+        int randEnemy = UnityEngine.Random.Range(0, 3);
+        enemies.Add(_enemyPool.Get(_enemiesTypePrefab[randEnemy].name, randPos));
+
     }
 
 

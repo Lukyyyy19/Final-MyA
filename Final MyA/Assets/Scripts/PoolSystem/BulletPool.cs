@@ -35,6 +35,7 @@ public class BulletPool : MonoBehaviour {
 
     public void Return(string _key, Bullet obj) {
         pools[_key].Return(obj);
+        obj.transform.localPosition = Vector3.zero;
     }
 
 

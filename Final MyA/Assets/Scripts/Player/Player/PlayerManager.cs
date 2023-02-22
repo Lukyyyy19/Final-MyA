@@ -153,7 +153,7 @@ public class PlayerManager : Entity, IHaveGun {
         if (paused) return;
         if (gun == null) return;
         if (!_canShoot) return;
-        gun.Fire(_hand, _firePoint);
+        gun.Fire(_hand, _firePoint, gameObject.layer);
         EventManager.instance.TriggerEvent("OnShoot");
         OnUpdateAmmo?.Invoke(gun.Ammo);
         _canShoot = false;
@@ -192,7 +192,7 @@ public class PlayerManager : Entity, IHaveGun {
     }
 
     private void LevelUp() {
-        if (_currentLevel > _maxHealth) return;
+        if (_currentLevel > _maxLevel) return;
         _currentLevel++;
         GameManager.instance._menuManagerUI.ShowTreeMenu();
         _uiTreeSkill.UpdateAbilitiesText();
@@ -233,10 +233,22 @@ public class PlayerManager : Entity, IHaveGun {
     private void OnSkillUnlocked(PlayerSkills skill) {
         switch (skill) {
             case PlayerSkills.MaxHealth1:
-                _maxHealth = 150;
+                _maxHealth = 15;
+                _health = _maxHealth;
                 break;
             case PlayerSkills.MaxHealth2:
-                _maxHealth = 200;
+                _maxHealth = 20;
+                _health = _maxHealth;
+                break;
+            case PlayerSkills.BulletQty:
+                gun.BulletsQty++;
+                gun.Spread = .35f;
+                break;
+            case PlayerSkills.Damage:
+                gun.Damage++;
+                break;
+            case PlayerSkills.FireRate:
+                gun.FireRate = .4f;
                 break;
         }
     }

@@ -13,6 +13,7 @@ public class ExplosiveEnemy : Enemy {
 
     protected override void Update() {
         base.Update();
+        if (_isSpawning) return;
         Move(Arrive(_target.position) + (Vector2)Separation());
         var playerColl = Physics2D.OverlapCircle(transform.position, _explosionDsit);
         if (playerColl.CompareTag("Player")) {
@@ -36,7 +37,8 @@ public class ExplosiveEnemy : Enemy {
             var angle = i * Mathf.PI * 2 / _bulletsToShoot;
             var pos = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * 5;
             _bullets[i] = _bulletPool.Get("Enemy Bullets", transform.position, pos);
-            _bullets[i].damage = 2;
+            _bullets[i].damage = 1;
+            _bullets[i].gameObject.layer = gameObject.layer;
             _bullets[i].currentSpeed = 4;
         }
     }

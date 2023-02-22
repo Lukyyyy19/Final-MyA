@@ -65,13 +65,16 @@ public class Gun : ICloneable {
 
     }
 
-    public void Fire(Transform _hand, Transform _firePoint) {
+    public void Fire(Transform _hand, Transform _firePoint, LayerMask _shooterLayer) {
         if (_ammo < 1) return;
         for (int i = 0; i < BulletsQty; i++) {
             Vector2 dir = _hand.rotation * Vector2.down;
             Vector2 pdir = Vector2.Perpendicular(dir) * UnityEngine.Random.Range(-Spread, Spread);
             var bullet = InstantiateBullets.instance.bulletPool.Get(BulletType, _firePoint.position, (dir + pdir));
             bullet.damage = Damage;
+            bullet.currentSpeed = 10;
+            bullet.gameObject.layer = _shooterLayer;
+
         }
         _ammo--;
     }

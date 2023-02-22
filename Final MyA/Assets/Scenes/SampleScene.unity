@@ -406,8 +406,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 83371706}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -11.732935, y: 3.334147, z: -1.4795158}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1262634275}
@@ -7441,7 +7441,7 @@ GameObject:
   - component: {fileID: 685971309}
   - component: {fileID: 685971310}
   - component: {fileID: 685971311}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -11654,7 +11654,9 @@ MonoBehaviour:
   _gunPool: {fileID: 2099838257}
   _enemyPool: {fileID: 335270503}
   _enemiesTypePrefab:
+  - {fileID: 1350369739991881496, guid: bfbfaea1638c7ac49a6991625d88bb3a, type: 3}
   - {fileID: 3907663774256574768, guid: 26b33f778a6aefe46bdbd81ee12da460, type: 3}
+  - {fileID: 6307414575759257060, guid: c839300022f64664fa768156ba313381, type: 3}
   _particleEnemiesAppear: {fileID: 6643764040035315855, guid: 84e5d34291f399d40a5807084d0a3700, type: 3}
   _eventManager: {fileID: 1727690228}
   _menuManagerUI: {fileID: 0}
