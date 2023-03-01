@@ -60,7 +60,7 @@ GameObject:
   - component: {fileID: 6307414575759257059}
   m_Layer: 7
   m_Name: Enemy (2)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -176,6 +176,10 @@ MonoBehaviour:
   steering: {x: 0, y: 0}
   particleDead: {fileID: 1145976097495435808, guid: 1daa2d47c4fb4244cb3a09a0521a4e9e, type: 3}
   particleAppear: {fileID: 6643764040035315855, guid: 84e5d34291f399d40a5807084d0a3700, type: 3}
+  powerUps:
+  - {fileID: 8288134522330351008, guid: d7f92e19121beea4e9e6e82c1440c976, type: 3}
+  - {fileID: 5457662184984462397, guid: c0bcebaaab13534408b17c88cbd94742, type: 3}
+  - {fileID: 5701639109343105677, guid: 6562831de96f0ea4b818409b640c386c, type: 3}
   _dashMinDist: 1.03
   damage: 2
 --- !u!61 &6307414575759257059

@@ -1,0 +1,6 @@
+Pause Menu=Menu de Pausa
+Resume=Continuar
+Quit=Salir
+Play=Jugar
+English=Ingles
+Spanish=Espaniol

@@ -7,10 +7,13 @@ public class Bullet : MonoBehaviour, IPausable {
     public float currentSpeed;
     public float damage = 3;
     string key;
-    float timer;
+    [SerializeField]
+    public float timer;
     public float destroyTime = 2f;
-    private Vector3 direction;
+    [SerializeField]
+    protected Vector3 direction;
     Action<string, Bullet> notify;
+    protected bool move;
 
     public void Configure(string _key, Action<string, Bullet> notify) {
         key = _key;
@@ -21,7 +24,6 @@ public class Bullet : MonoBehaviour, IPausable {
         transform.position = pos;
         direction = dir.normalized;
     }
-    bool move;
     public virtual void Prender() {
         move = true;
     }
@@ -39,13 +41,18 @@ public class Bullet : MonoBehaviour, IPausable {
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D other) {
-        if (other.GetComponentInParent<IDamageable>() != null) {
-            other.GetComponentInParent<IDamageable>().TakeDamage((int)damage);
+        if (other.GetComponent<IDamageable>() != null) {
+            other.GetComponent<IDamageable>().TakeDamage((int)damage);
         }
-        notify.Invoke(key, this);
+        ResetStats();
     }
 
     protected virtual void TimeCompleted() {
+        timer = 0;
+        ResetStats();
+    }
+
+    protected virtual void ResetStats() {
         timer = 0;
         notify.Invoke(key, this);
     }

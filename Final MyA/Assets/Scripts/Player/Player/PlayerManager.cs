@@ -22,7 +22,7 @@ public class PlayerManager : Entity, IHaveGun {
     private ParticleSystem _dashParticle;
     [SerializeField]
     private BoxCollider2D _wallCollider;
-    public GunStats _gunStats;
+    private GunStats gunStats;
     public static PlayerManager instance;
     public PlayerInputs playerInputs;
     public PlayerAnimation playerAnimation;
@@ -70,9 +70,6 @@ public class PlayerManager : Entity, IHaveGun {
     private float _timer;
     private bool _startTime;
 
-    [Header("Gun")]
-    [SerializeField]
-    public Gun gun;
 
     [SerializeField]
     private GunsType _gunsType;
@@ -84,13 +81,14 @@ public class PlayerManager : Entity, IHaveGun {
 
 
     public TreeSkills TreeSkills { get => _treeSkills; }
+    public GunStats GunStats { get => gunStats; set => gunStats = value; }
 
     protected override void Awake() {
         base.Awake();
         instance = this;
         playerInputs = new PlayerInputs();
         playerVisuals = new UpdatePlayerVisuals(sr, transform);
-        _gunStats = GetComponentInChildren<GunStats>();
+        gunStats = new GunStats();
         _timer = _startTimeFloat;
         playerAnimation = GetComponent<PlayerAnimation>();
         _treeSkills = new TreeSkills();
@@ -110,9 +108,9 @@ public class PlayerManager : Entity, IHaveGun {
         _keyDirection.y = playerInputs.MovVer;
 
 
-        if (gun.Ammo < 1) {
+        if (gunStats.gun.Ammo < 1) {
             reloadTimer += Time.deltaTime;
-            Invoke("Reload", gun.ReloadTime);
+            Invoke("Reload", gunStats.gun.ReloadTime);
         }
         if (reloadTimer >= reloadTimerStart) {
             reloadTimer = reloadTimerStart;
@@ -121,7 +119,7 @@ public class PlayerManager : Entity, IHaveGun {
             Shoot();
         }
         if (playerInputs.Reload) {
-            Invoke("Reload", gun.ReloadTime);
+            Invoke("Reload", gunStats.gun.ReloadTime);
         }
         if (playerInputs.Dash && _canDash) {
             if (!TreeSkills.IsUpgradeUnlocked(PlayerSkills.Dash)) return;
@@ -151,13 +149,13 @@ public class PlayerManager : Entity, IHaveGun {
 
     public void Shoot() {
         if (paused) return;
-        if (gun == null) return;
+        if (gunStats.gun == null) return;
         if (!_canShoot) return;
-        gun.Fire(_hand, _firePoint, gameObject.layer);
+        gunStats.gun.Fire(_hand, _firePoint, gameObject.layer);
         EventManager.instance.TriggerEvent("OnShoot");
-        OnUpdateAmmo?.Invoke(gun.Ammo);
+        OnUpdateAmmo?.Invoke(gunStats.gun.Ammo);
         _canShoot = false;
-        Invoke("CanShootAgain", gun.FireRate);
+        Invoke("CanShootAgain", gunStats.gun.FireRate);
     }
 
     public void CanShootAgain() {
@@ -166,12 +164,14 @@ public class PlayerManager : Entity, IHaveGun {
     }
 
     public void Reload() {
-        if (gun.Ammo == gun.MaxAmmo) return;
-        gun.Ammo = gun.MaxAmmo;
-        OnUpdateAmmo?.Invoke(gun.Ammo);
+        if (gunStats.gun.Ammo == gunStats.gun.MaxAmmo) return;
+        gunStats.gun.Ammo = gunStats.gun.MaxAmmo;
+        OnUpdateAmmo?.Invoke(gunStats.gun.Ammo);
         reloadTimer = 0;
 
     }
+
+
 
     public void UpdateReloadTimer(float time) {
         reloadTimerStart = time;
@@ -180,8 +180,7 @@ public class PlayerManager : Entity, IHaveGun {
     private void OnTriggerEnter2D(Collider2D other) {
         IPickeupable pickeupable;
         if (!other.TryGetComponent<IPickeupable>(out pickeupable)) return;
-        pickeupable.OnPickUp();
-        OnUpdateAmmo?.Invoke(gun.Ammo);
+        pickeupable.OnPickUp(this);
     }
 
     public void EnemyKill() {
@@ -200,15 +199,19 @@ public class PlayerManager : Entity, IHaveGun {
         ScreenManager.instance.Pause();
     }
 
+    public void RecoverHealth() {
+        _health = _maxHealth;
+    }
+
     protected override void Die() {
         base.Die();
         GameManager.instance.GameOver();
     }
 
     public void AsignGun() {
-        gun = GunContainer.GetGun(_gunsType);
-        reloadTimerStart = gun.ReloadTime;
-        _gunStats.Init();
+        gunStats.gun = GunContainer.GetGun(_gunsType);
+        reloadTimerStart = gunStats.gun.ReloadTime;
+        gunStats.Init();
     }
 
     public override void TakeDamage(int damage) {
@@ -234,21 +237,21 @@ public class PlayerManager : Entity, IHaveGun {
         switch (skill) {
             case PlayerSkills.MaxHealth1:
                 _maxHealth = 15;
-                _health = _maxHealth;
+                RecoverHealth();
                 break;
             case PlayerSkills.MaxHealth2:
                 _maxHealth = 20;
-                _health = _maxHealth;
+                RecoverHealth();
                 break;
             case PlayerSkills.BulletQty:
-                gun.BulletsQty++;
-                gun.Spread = .35f;
+                gunStats.gun.BulletsQty++;
+                gunStats.gun.Spread = .35f;
                 break;
             case PlayerSkills.Damage:
-                gun.Damage++;
+                gunStats.gun.Damage++;
                 break;
             case PlayerSkills.FireRate:
-                gun.FireRate = .4f;
+                gunStats.gun.FireRate = .4f;
                 break;
         }
     }

@@ -45,7 +45,7 @@ public class CursorManager : MonoBehaviour, IPausable {
         _crossHair.position = (Vector2)_cam.ScreenToWorldPoint(_playerManager.playerInputs.MousePos);
 
         if (_playAnimation) {
-            _timer += Time.deltaTime * _playerManager.gun.FireRate;
+            _timer += Time.deltaTime * _playerManager.GunStats.gun.FireRate;
             if (_timer >= 1) {
                 _timer = 1;
                 _playAnimation = false;

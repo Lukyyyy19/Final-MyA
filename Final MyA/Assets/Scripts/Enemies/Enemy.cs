@@ -28,6 +28,10 @@ public class Enemy : Entity {
     string key;
     Action<string, Enemy> notify;
 
+    [SerializeField]
+    GameObject[] powerUps;
+
+
     protected override void Start() {
         base.Start();
         radiusSeparation = 5.3f;
@@ -116,8 +120,21 @@ public class Enemy : Entity {
         pm.startColor = sr.color;
         PlayerManager.instance.EnemyKill();
         GameManager.instance.RemoveEnemyFormHash(this);
+        InstantiatePowerUps();
         notify.Invoke(key, this);
     }
+
+    private void InstantiatePowerUps() {
+        var x = UnityEngine.Random.Range(0, 100);
+        if (x < 2) {
+            Instantiate(powerUps[0], transform.position, Quaternion.identity);
+        } else if (x > 2 && x < 3) {
+            Instantiate(powerUps[1], transform.position, Quaternion.identity);
+        } else if (x > 3 && x < 4) {
+            Instantiate(powerUps[2], transform.position, Quaternion.identity);
+        }
+    }
+
     public void Reactivate() {
         sr.enabled = true;
         _rb.isKinematic = false;

@@ -13,6 +13,8 @@ public class UIMenuManager : MonoBehaviour {
     GameObject panel;
     [SerializeField]
     private TextMeshProUGUI _timeText;
+    public bool choosingAbility;
+
 
     public string TimeText { set => _timeText.text = value; }
 
@@ -25,12 +27,14 @@ public class UIMenuManager : MonoBehaviour {
         _pauseMenu.SetActive(true);
     }
     public void ShowTreeMenu() {
+        choosingAbility = true;
         panel.SetActive(true);
         _treeMenu.SetActive(true);
     }
     public void DeactivateTreeMenu() {
-        panel.SetActive(false);
-        _treeMenu.SetActive(false);
+        choosingAbility = false;
+        // panel.SetActive(false);
+        // _treeMenu.SetActive(false);
     }
 
 }

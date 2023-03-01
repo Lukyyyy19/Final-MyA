@@ -1,3 +1,3 @@
 public interface IPickeupable {
-    void OnPickUp();
+    void OnPickUp(PlayerManager player);
 }

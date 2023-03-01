@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour, IPausable {
         _realTime = TimeSpan.FromSeconds(_timeelapsed);
         _menuManagerUI.TimeText = _realTime.ToString("mm':'ss");
 
-        if (Input.GetButtonDown("Pause")) {
+        if (Input.GetButtonDown("Pause") && !_menuManagerUI.choosingAbility) {
 
             switch (isPaused) {
                 case false:

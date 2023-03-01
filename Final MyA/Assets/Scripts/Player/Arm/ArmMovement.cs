@@ -65,7 +65,7 @@ public class ArmMovement : MonoBehaviour, IPausable {
     }
 
     void UpdateGunVisuals(int Ammo) {
-        float newAmmo = (float)Ammo / ((float)_playerManager.gun.MaxAmmo / 2f);
+        float newAmmo = (float)Ammo / ((float)_playerManager.GunStats.gun.MaxAmmo / 2f);
         gunSr.material.SetFloat("_Ammo", newAmmo);
     }
 }

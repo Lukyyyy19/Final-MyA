@@ -8,18 +8,15 @@ public class InstantiateBullets : InstanceClass<InstantiateBullets> {
     public BulletPool bulletPool;
 
     [SerializeField]
-    private Bullet _mainBullet;
-    [SerializeField]
-    private Bullet _enemyBullet;
-    [SerializeField]
-    private Bullet _miniBullet;
-    [SerializeField]
-    private Bullet _disperseBullet;
+    private Bullet[] _bulletsArr;
+
 
     protected void Start() {
-        bulletPool.IntantiateBullets("Main Bullets", _mainBullet, 25);
-        bulletPool.IntantiateBullets("Enemy Bullets", _enemyBullet, 25);
-        bulletPool.IntantiateBullets("Mini Bullets", _miniBullet, 25);
-        bulletPool.IntantiateBullets("Disperse Bullets", _disperseBullet, 25);
+        bulletPool.IntantiateBullets("Main Bullets", _bulletsArr[0], 25);
+        bulletPool.IntantiateBullets("Enemy Bullets", _bulletsArr[1], 25);
+        bulletPool.IntantiateBullets("Mini Bullets", _bulletsArr[2], 25);
+        bulletPool.IntantiateBullets("Disperse Bullets", _bulletsArr[3], 25);
+        bulletPool.IntantiateBullets("Intelligent Bullets", _bulletsArr[4], 25);
+        //bulletPool.IntantiateBullets("Lightning Bullets", _bulletsArr[5], 3);
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ScreenManager : MonoBehaviour {
     public static ScreenManager instance;
@@ -26,5 +27,9 @@ public class ScreenManager : MonoBehaviour {
         foreach (var item in pausables) {
             item.Resume();
         }
+    }
+
+    public void ChangeScene(string SceneName) {
+        SceneManager.LoadScene(SceneName);
     }
 }

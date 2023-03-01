@@ -38,12 +38,12 @@ public class PlayerStats : MonoBehaviour {
     }
 
     private void Update() {
-        UpdateAmmo(_playerManager.gun.Ammo);
-        _textDamage.text = _playerManager.gun.Damage.ToString();
-        _textFireRate.text = _playerManager.gun.FireRate.ToString();
-        _textName.text = _playerManager.gun.Name.ToString();
-        _textSpread.text = _playerManager.gun.Spread.ToString();
-        _textReloadTime.text = _playerManager.gun.ReloadTime.ToString();
+        UpdateAmmo(_playerManager.GunStats.gun.Ammo);
+        _textDamage.text = _playerManager.GunStats.gun.Damage.ToString();
+        _textFireRate.text = _playerManager.GunStats.gun.FireRate.ToString();
+        _textName.text = _playerManager.GunStats.gun.Name.ToString();
+        _textSpread.text = _playerManager.GunStats.gun.Spread.ToString();
+        _textReloadTime.text = _playerManager.GunStats.gun.ReloadTime.ToString();
         _reloadTime.fillAmount = _playerManager.reloadTimer / _playerManager.reloadTimerStart;
     }
 
