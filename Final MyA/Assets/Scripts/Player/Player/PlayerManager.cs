@@ -122,7 +122,7 @@ public class PlayerManager : Entity, IHaveGun {
             Invoke("Reload", gunStats.gun.ReloadTime);
         }
         if (playerInputs.Dash && _canDash) {
-            if (!TreeSkills.IsUpgradeUnlocked(PlayerSkills.Dash)) return;
+            if (!TreeSkills.PlayerHasSkill(PlayerSkills.Dash)) return;
             _startDash = true;
         }
         if (_startDash) {

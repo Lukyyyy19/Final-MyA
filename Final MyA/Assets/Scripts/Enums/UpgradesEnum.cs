@@ -1,12 +1,11 @@
 namespace UpgradesEnum {
     public enum PlayerSkills {
         Dash = 0,
-        Dash1 = 1,
-        MaxHealth1 = 2,
-        MaxHealth2 = 3,
-        BulletQty = 4,
-        FireRate = 5,
-        Damage = 6,
+        MaxHealth1 = 1,
+        MaxHealth2 = 2,
+        BulletQty = 3,
+        FireRate = 4,
+        Damage = 5,
         None
     }
 }
