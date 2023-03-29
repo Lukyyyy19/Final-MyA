@@ -35,7 +35,7 @@ public class newUITreeSkill : MonoBehaviour {
     }
 
     public void UpdateAbilitiesText() {
-        if (_treeSkills.PlayerSkillsCount() < 6) {
+        if (_treeSkills.PlayerSkillsCount() < _treeSkills.GetMaxLevel()) {
             var randomAbilityList = _treeSkills.GetRandomAbility();
             _btnAbility1.gameObject.SetActive(true);
             _ability1 = randomAbilityList[0];

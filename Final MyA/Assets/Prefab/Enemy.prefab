@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fc31b8db0ac8bc44b4480d9feeb1672, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxSpeed: 3
+  _maxSpeed: 0
   _health: 0
   _maxHealth: 1
   _hand: {fileID: 1350369739360383890}
@@ -181,7 +181,7 @@ MonoBehaviour:
   - {fileID: 8288134522330351008, guid: d7f92e19121beea4e9e6e82c1440c976, type: 3}
   - {fileID: 5457662184984462397, guid: c0bcebaaab13534408b17c88cbd94742, type: 3}
   - {fileID: 5701639109343105677, guid: 6562831de96f0ea4b818409b640c386c, type: 3}
-  shootDist: 26
+  shootDist: 0
   stopDist: 3
   _gunsType: 1
   _firePoint: {fileID: 1350369740043261670}

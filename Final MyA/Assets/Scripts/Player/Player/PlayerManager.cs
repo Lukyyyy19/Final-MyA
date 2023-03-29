@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using GunsEnum;
 using UpgradesEnum;
@@ -43,7 +42,7 @@ public class PlayerManager : Entity, IHaveGun {
     private int nextLevel = 3;
     [SerializeField]
     private int _currentLevel;
-    private int _maxLevel = 7;
+    private int _maxLevel;
 
 
     [Header("Raycasting")]
@@ -94,6 +93,7 @@ public class PlayerManager : Entity, IHaveGun {
         _treeSkills = new TreeSkills();
         _treeSkills.Init();
         _treeSkills.OnSkillUnlocked += OnSkillUnlocked;
+        _maxLevel = _treeSkills.GetMaxLevel();
     }
 
     protected override void Start() {
@@ -191,7 +191,7 @@ public class PlayerManager : Entity, IHaveGun {
     }
 
     private void LevelUp() {
-        if (_currentLevel > _maxLevel) return;
+        if (_currentLevel == _maxLevel) return;
         _currentLevel++;
         GameManager.instance._menuManagerUI.ShowTreeMenu();
         _uiTreeSkill.UpdateAbilitiesText();
@@ -243,6 +243,10 @@ public class PlayerManager : Entity, IHaveGun {
                 _maxHealth = 20;
                 RecoverHealth();
                 break;
+            case PlayerSkills.MaxHealth3:
+                _maxHealth = 25;
+                RecoverHealth();
+                break;
             case PlayerSkills.BulletQty:
                 gunStats.gun.BulletsQty++;
                 gunStats.gun.Spread = .35f;
@@ -264,7 +268,8 @@ public class PlayerManager : Entity, IHaveGun {
             _isDashing = false;
             _startDash = false;
             StartCoroutine("DashAgain");
-        } else {
+        }
+        else {
             _timer -= Time.deltaTime;
             colldier.isTrigger = true;
             _isDashing = true;
