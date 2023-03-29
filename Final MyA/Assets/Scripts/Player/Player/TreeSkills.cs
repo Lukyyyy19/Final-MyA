@@ -4,45 +4,44 @@ using UnityEngine;
 using UpgradesEnum;
 using System;
 using System.Linq;
+using UnityEngine.Serialization;
+
 [Serializable]
 
 
 public class TreeSkills {
     [SerializeField]
-    List<PlayerSkills> allSkills = new List<PlayerSkills>();
+    List<PlayerSkills> _allSkills = new List<PlayerSkills>();
+     [SerializeField]
+    List<PlayerSkills> _playerSkills = new List<PlayerSkills>();
     [SerializeField]
-    List<PlayerSkills> playerSkills = new List<PlayerSkills>();
+    List<PlayerSkills> _allowedSkills = new List<PlayerSkills>();
     [SerializeField]
-    List<PlayerSkills> allowedSkills = new List<PlayerSkills>();
+    List<PlayerSkills> _randomSkills = new List<PlayerSkills>();
     [SerializeField]
-    List<PlayerSkills> randomSkills = new List<PlayerSkills>();
-    [SerializeField]
-    int numberOfRepetitions;
+    
     public Action<PlayerSkills> OnSkillUnlocked;
     public void Init() {
-        allSkills.Add(PlayerSkills.Dash);
-        allSkills.Add(PlayerSkills.MaxHealth1);
-        allSkills.Add(PlayerSkills.MaxHealth2);
-        allSkills.Add(PlayerSkills.MaxHealth3);
-        allSkills.Add(PlayerSkills.BulletQty);
-        allSkills.Add(PlayerSkills.FireRate);
-        allSkills.Add(PlayerSkills.Damage);
+        _allSkills.Add(PlayerSkills.Dash);
+        _allSkills.Add(PlayerSkills.Health_1);
+        _allSkills.Add(PlayerSkills.Health_2);
+        _allSkills.Add(PlayerSkills.Two_Shots);
+        _allSkills.Add(PlayerSkills.FireRate);
+        _allSkills.Add(PlayerSkills.Damage);
     }
 
     public List<PlayerSkills> GetRandomAbility() {
-        randomSkills.Clear();
-        allowedSkills = allSkills.Where(skill => !PlayerHasSkill(skill) && IsUnlockedForPlayer(skill)).ToList();
+        _randomSkills.Clear();
+        _allowedSkills = _allSkills.Where(skill => !PlayerHasSkill(skill) && IsUnlockedForPlayer(skill)).ToList();
 
-        numberOfRepetitions = allowedSkills.Count > 3 ? 3 : allowedSkills.Count;
-        while (randomSkills.Count < numberOfRepetitions) {
-            int ab = UnityEngine.Random.Range(0, allowedSkills.Count);
-            var ps = allowedSkills[ab];
-            allowedSkills.Remove(ps);
-            Debug.Log("Aniadiendo nueva skill que es " + ps);
-            randomSkills.Add(ps);
+        var numberOfRepetitions = _allowedSkills.Count > 3 ? 3 : _allowedSkills.Count;
+        while (_randomSkills.Count < numberOfRepetitions) {
+            int ab = UnityEngine.Random.Range(0, _allowedSkills.Count);
+            var ps = _allowedSkills[ab];
+            _allowedSkills.Remove(ps);
+            _randomSkills.Add(ps);
         }
-        Debug.Log($"La lista contiene {randomSkills.Count}: {randomSkills[0]}");
-        return randomSkills;
+        return _randomSkills;
     }
 
 
@@ -62,38 +61,35 @@ public class TreeSkills {
             return true;
         }
     }
-    private void AddToPlayerSkills(PlayerSkills skill) {
-        if (!PlayerHasSkill(skill)) {
-            playerSkills.Add(skill);
-            OnSkillUnlocked?.Invoke(skill);
-            Debug.Log($"Hablilidad desbloqueda: {skill}");
-        }
-        else {
-            Debug.Log($"No tienes los puntos necesarios para desbloquear {skill} o ya esta desbloqueda");
-        }
+    private void AddToPlayerSkills(PlayerSkills skill)
+    {
+        if (PlayerHasSkill(skill)) return;
+        _playerSkills.Add(skill);
+        OnSkillUnlocked?.Invoke(skill);
     }
 
-    PlayerSkills GetDependentSkill(PlayerSkills skill) {
-        switch (skill) {
-            case PlayerSkills.MaxHealth2: return PlayerSkills.MaxHealth1;
-            case PlayerSkills.MaxHealth3: return PlayerSkills.MaxHealth2;
-        }
-        return PlayerSkills.None;
+    private PlayerSkills GetDependentSkill(PlayerSkills skill)
+    {
+        return skill switch
+        {
+            PlayerSkills.Health_2 => PlayerSkills.Health_1,
+            _ => PlayerSkills.None
+        };
     }
 
-    bool IsUnlockedForPlayer(PlayerSkills skill) {
-        PlayerSkills dependentSkill = GetDependentSkill(skill);
+    private bool IsUnlockedForPlayer(PlayerSkills skill) {
+        var dependentSkill = GetDependentSkill(skill);
         return dependentSkill == PlayerSkills.None || PlayerHasSkill(dependentSkill);
     }
 
 
     public bool PlayerHasSkill(PlayerSkills skill) {
-        return playerSkills.Contains(skill);
+        return _playerSkills.Contains(skill);
     }
     public int PlayerSkillsCount() {
-        return playerSkills.Count;
+        return _playerSkills.Count;
     }
     public int GetMaxLevel() {
-        return allSkills.Count;
+        return _allSkills.Count;
     }
 }

@@ -235,19 +235,15 @@ public class PlayerManager : Entity, IHaveGun {
 
     private void OnSkillUnlocked(PlayerSkills skill) {
         switch (skill) {
-            case PlayerSkills.MaxHealth1:
+            case PlayerSkills.Health_1:
                 _maxHealth = 15;
                 RecoverHealth();
                 break;
-            case PlayerSkills.MaxHealth2:
+            case PlayerSkills.Health_2:
                 _maxHealth = 20;
                 RecoverHealth();
                 break;
-            case PlayerSkills.MaxHealth3:
-                _maxHealth = 25;
-                RecoverHealth();
-                break;
-            case PlayerSkills.BulletQty:
+            case PlayerSkills.Two_Shots:
                 gunStats.gun.BulletsQty++;
                 gunStats.gun.Spread = .35f;
                 break;

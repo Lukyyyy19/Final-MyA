@@ -39,17 +39,20 @@ public class newUITreeSkill : MonoBehaviour {
             var randomAbilityList = _treeSkills.GetRandomAbility();
             _btnAbility1.gameObject.SetActive(true);
             _ability1 = randomAbilityList[0];
-            _txtAbility1.text = _ability1.ToString();
+            var ability1Text = _ability1.ToString();
+            _txtAbility1.text = ability1Text.Replace('_', ' ');
             if (randomAbilityList.Count > 1) {
                 _btnAbility2.gameObject.SetActive(true);
                 _ability2 = randomAbilityList[1];
-                _txtAbility2.text = _ability2.ToString();
+                var ability2Text= _ability2.ToString();
+                _txtAbility2.text = ability2Text.Replace('_', ' ');
             }
 
             if (randomAbilityList.Count > 2) {
                 _btnAbility3.gameObject.SetActive(true);
                 _ability3 = randomAbilityList[2];
-                _txtAbility3.text = _ability3.ToString();
+                var ability3Text = _ability3.ToString();
+                _txtAbility3.text = ability3Text.Replace('_', ' ');
             }
 
             _btnAbility1.onClick.AddListener(() => UnlockSkill(_ability1));
