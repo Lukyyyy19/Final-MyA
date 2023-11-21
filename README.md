@@ -11,3 +11,4 @@ Mouse left click - Shoot
 
 Space - Dash (if is unlocked)
 
+![Untitled video - Made with Clipchamp (1)](https://github.com/Lukyyyy19/Final-MyA/assets/83474712/1401de09-89fe-43d8-afb4-4b8f873c727e)
